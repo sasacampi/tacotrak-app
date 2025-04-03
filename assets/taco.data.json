@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "nome": "Maçã",
+    "calorias": 52,
+    "proteinas": 0.3,
+    "carboidratos": 14
+  },
+  {
+    "id": 2,
+    "nome": "Banana",
+    "calorias": 89,
+    "proteinas": 1.1,
+    "carboidratos": 23
+  },
+  {
+    "id": 3,
+    "nome": "Arroz branco cozido",
+    "calorias": 130,
+    "proteinas": 2.7,
+    "carboidratos": 28
+  },
+  {
+    "id": 4,
+    "nome": "Feijão carioca cozido",
+    "calorias": 76,
+    "proteinas": 4.8,
+    "carboidratos": 14
+  },
+  {
+    "id": 5,
+    "nome": "Frango grelhado",
+    "calorias": 159,
+    "proteinas": 31,
+    "carboidratos": 0
+  },
+  {
+    "id": 6,
+    "nome": "Ovo cozido",
+    "calorias": 155,
+    "proteinas": 13,
+    "carboidratos": 1.1
+  },
+  {
+    "id": 7,
+    "nome": "Leite integral",
+    "calorias": 61,
+    "proteinas": 3.2,
+    "carboidratos": 4.8
+  },
+  {
+    "id": 8,
+    "nome": "Pão francês",
+    "calorias": 299,
+    "proteinas": 7.6,
+    "carboidratos": 58
+  },
+  {
+    "id": 9,
+    "nome": "Queijo minas frescal",
+    "calorias": 243,
+    "proteinas": 17,
+    "carboidratos": 3.2
+  },
+  {
+    "id": 10,
+    "nome": "Batata cozida",
+    "calorias": 86,
+    "proteinas": 1.7,
+    "carboidratos": 20
+  },
+  {
+    "id": 11,
+    "nome": "Cenoura crua",
+    "calorias": 41,
+    "proteinas": 1,
+    "carboidratos": 10
+  },
+  {
+    "id": 12,
+    "nome": "Alface",
+    "calorias": 15,
+    "proteinas": 1.4,
+    "carboidratos": 2.9
+  },
+  {
+    "id": 13,
+    "nome": "Tomate",
+    "calorias": 18,
+    "proteinas": 1,
+    "carboidratos": 3.9
+  },
+  {
+    "id": 14,
+    "nome": "Abacate",
+    "calorias": 160,
+    "proteinas": 2,
+    "carboidratos": 8.5
+  },
+  {
+    "id": 15,
+    "nome": "Iogurte natural",
+    "calorias": 60,
+    "proteinas": 4,
+    "carboidratos": 3.4
+  },
+  {
+    "id": 16,
+    "nome": "Peixe assado",
+    "calorias": 129,
+    "proteinas": 26,
+    "carboidratos": 0
+  },
+  {
+    "id": 17,
+    "nome": "Laranja",
+    "calorias": 47,
+    "proteinas": 0.9,
+    "carboidratos": 12
+  },
+  {
+    "id": 18,
+    "nome": "Mamão",
+    "calorias": 43,
+    "proteinas": 0.5,
+    "carboidratos": 11
+  },
+  {
+    "id": 19,
+    "nome": "Carne bovina grelhada",
+    "calorias": 250,
+    "proteinas": 26,
+    "carboidratos": 0
+  },
+  {
+    "id": 20,
+    "nome": "Espaguete cozido",
+    "calorias": 158,
+    "proteinas": 5.8,
+    "carboidratos": 31
+  },
+  {
+    "id": 21,
+    "nome": "Manga",
+    "calorias": 60,
+    "proteinas": 0.8,
+    "carboidratos": 15
+  },
+  {
+    "id": 22,
+    "nome": "Pera",
+    "calorias": 57,
+    "proteinas": 0.4,
+    "carboidratos": 15
+  },
+  {
+    "id": 23,
+    "nome": "Melancia",
+    "calorias": 30,
+    "proteinas": 0.6,
+    "carboidratos": 7.6
+  },
+  {
+    "id": 24,
+    "nome": "Uva",
+    "calorias": 69,
+    "proteinas": 0.7,
+    "carboidratos": 18
+  },
+  {
+    "id": 25,
+    "nome": "Abacaxi",
+    "calorias": 50,
+    "proteinas": 0.5,
+    "carboidratos": 13
+  },
+  {
+    "id": 26,
+    "nome": "Morango",
+    "calorias": 32,
+    "proteinas": 0.7,
+    "carboidratos": 7.7
+  },
+  {
+    "id": 27,
+    "nome": "Melão",
+    "calorias": 34,
+    "proteinas": 0.8,
+    "carboidratos": 8.2
+  },
+  {
+    "id": 28,
+    "nome": "Tangerina",
+    "calorias": 53,
+    "proteinas": 0.8,
+    "carboidratos": 13
+  },
+  {
+    "id": 29,
+    "nome": "Goiaba",
+    "calorias": 68,
+    "proteinas": 2.6,
+    "carboidratos": 14
+  },
+  {
+    "id": 30,
+    "nome": "Açaí (polpa)",
+    "calorias": 58,
+    "proteinas": 0.8,
+    "carboidratos": 6.2
+  },
+  {
+    "id": 31,
+    "nome": "Caju",
+    "calorias": 43,
+    "proteinas": 1,
+    "carboidratos": 11
+  },
+  {
+    "id": 32,
+    "nome": "Kiwi",
+    "calorias": 61,
+    "proteinas": 1.1,
+    "carboidratos": 15
+  },
+  {
+    "id": 33,
+    "nome": "Pêssego",
+    "calorias": 39,
+    "proteinas": 0.9,
+    "carboidratos": 10
+  },
+  {
+    "id": 34,
+    "nome": "Ameixa",
+    "calorias": 46,
+    "proteinas": 0.7,
+    "carboidratos": 11
+  },
+  {
+    "id": 35,
+    "nome": "Limão",
+    "calorias": 29,
+    "proteinas": 1.1,
+    "carboidratos": 9.3
+  },
+  {
+    "id": 36,
+    "nome": "Maracujá",
+    "calorias": 97,
+    "proteinas": 2.2,
+    "carboidratos": 23
+  },
+  {
+    "id": 37,
+    "nome": "Cenoura cozida",
+    "calorias": 35,
+    "proteinas": 0.8,
+    "carboidratos": 8.2
+  },
+  {
+    "id": 38,
+    "nome": "Beterraba cozida",
+    "calorias": 49,
+    "proteinas": 1.3,
+    "carboidratos": 11
+  },
+  {
+    "id": 39,
+    "nome": "Brócolis cozido",
+    "calorias": 35,
+    "proteinas": 2.4,
+    "carboidratos": 7.2
+  },
+  {
+    "id": 40,
+    "nome": "Couve manteiga refogada",
+    "calorias": 90,
+    "proteinas": 2.9,
+    "carboidratos": 10
+  },
+  {
+    "id": 41,
+    "nome": "Abóbora cozida",
+    "calorias": 48,
+    "proteinas": 1.4,
+    "carboidratos": 11
+  },
+  {
+    "id": 42,
+    "nome": "Berinjela cozida",
+    "calorias": 35,
+    "proteinas": 0.8,
+    "carboidratos": 8.7
+  },
+  {
+    "id": 43,
+    "nome": "Chuchu cozido",
+    "calorias": 19,
+    "proteinas": 0.7,
+    "carboidratos": 4.5
+  },
+  {
+    "id": 44,
+    "nome": "Vagem cozida",
+    "calorias": 35,
+    "proteinas": 1.9,
+    "carboidratos": 7.9
+  },
+  {
+    "id": 45,
+    "nome": "Batata-doce cozida",
+    "calorias": 77,
+    "proteinas": 1.6,
+    "carboidratos": 18
+  },
+  {
+    "id": 46,
+    "nome": "Mandioca cozida",
+    "calorias": 125,
+    "proteinas": 1.4,
+    "carboidratos": 30
+  },
+  {
+    "id": 47,
+    "nome": "Milho cozido",
+    "calorias": 98,
+    "proteinas": 3.2,
+    "carboidratos": 21
+  },
+  {
+    "id": 48,
+    "nome": "Ervilha cozida",
+    "calorias": 84,
+    "proteinas": 5.4,
+    "carboidratos": 15
+  },
+  {
+    "id": 49,
+    "nome": "Lentilha cozida",
+    "calorias": 116,
+    "proteinas": 9,
+    "carboidratos": 20
+  },
+  {
+    "id": 50,
+    "nome": "Soja cozida",
+    "calorias": 173,
+    "proteinas": 16.6,
+    "carboidratos": 10
+  }
+]
