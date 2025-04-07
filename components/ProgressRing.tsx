@@ -3,7 +3,7 @@
 import type React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../app/context/ThemeContext";
 
 interface ProgressRingProps {
   progress: number; // 0 to 1

@@ -9,7 +9,7 @@ import {
   type ViewStyle,
   type TextStyle,
 } from "react-native";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../app/context/ThemeContext";
 
 interface ButtonProps {
   title: string;

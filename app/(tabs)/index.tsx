@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../../context/ThemeContent";
+import { useTheme } from "../context/ThemeContext";
 import ProgressRing from "../../components/ProgressRing";
 import MacroBar from "../../components/MacroBar";
 import Button from "../../components/Button";

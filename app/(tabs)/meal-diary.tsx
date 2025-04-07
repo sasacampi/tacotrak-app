@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../../context/ThemeContent";
+import { useTheme } from "../context/ThemeContext";
 import MealSection from "../../components/MealSection";
 import { AppNavigationProp } from "../../types/navigation";
 

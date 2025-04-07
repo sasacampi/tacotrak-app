@@ -4,7 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../app/context/ThemeContext";
 import FoodItem from "./FoodItem";
 
 interface Food {

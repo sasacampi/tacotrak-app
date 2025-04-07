@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../context/ThemeContent";
+import { useTheme } from "./context/ThemeContext";
 import Button from "../components/Button";
 import type { ScreenProps } from "../types/navigation";
 

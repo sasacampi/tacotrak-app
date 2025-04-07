@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../context/ThemeContent";
+import { useTheme } from "./context/ThemeContext";
 import type { ScreenProps } from "../types/navigation";
 
 const SplashScreen = ({ navigation }: ScreenProps) => {
