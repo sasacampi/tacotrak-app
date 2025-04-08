@@ -1,6 +1,7 @@
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RouteProp } from "@react-navigation/native";
 
+// Tipo para os itens alimentares
 export type FoodItem = {
   id: string;
   name: string;
@@ -12,6 +13,7 @@ export type FoodItem = {
   fat?: number;
 };
 
+// Lista de telas e seus parâmetros
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
@@ -25,6 +27,7 @@ export type RootStackParamList = {
   Profile: undefined;
 };
 
+// Tipos de navegação e rota
 export type AppNavigationProp<T extends keyof RootStackParamList> =
   NativeStackNavigationProp<RootStackParamList, T>;
 
@@ -33,7 +36,11 @@ export type AppRouteProp<T extends keyof RootStackParamList> = RouteProp<
   T
 >;
 
+// Tipo genérico para props de uma tela
 export interface ScreenProps<T extends keyof RootStackParamList> {
   navigation: AppNavigationProp<T>;
   route: AppRouteProp<T>;
 }
+
+// Tipo específico para a tela MealDiary
+export type MealDiaryScreenProps = ScreenProps<"MealDiary">;

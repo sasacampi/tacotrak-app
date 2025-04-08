@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import type React from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -10,18 +13,27 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import MealSection from "../../components/MealSection";
-import { AppNavigationProp } from "../../types/navigation";
+import FoodSearchModal from "../../components/FoodSearchModal";
+import MacroProgressBar from "../../components/MacroProgressBar";
+import type { AppNavigationProp } from "../../types/navigation";
 
 type FoodItem = {
   id: string;
   name: string;
   calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
   portion: string;
+  quantity: number;
 };
 
 type Meal = {
   title: string;
   totalCalories: number;
+  totalCarbs: number;
+  totalProtein: number;
+  totalFat: number;
   foods: FoodItem[];
 };
 
@@ -30,75 +42,189 @@ type MealType = "breakfast" | "lunch" | "dinner" | "snacks";
 type MockMeals = Record<MealType, Meal>;
 
 type MealDiaryScreenProps = {
-  navigation: AppNavigationProp;
+  navigation: AppNavigationProp<"MealDiary">;
 };
 
-const mockMeals: MockMeals = {
+// Metas diárias
+const DAILY_GOALS = {
+  calories: 2200,
+  carbs: 275, // ~50% das calorias
+  protein: 150, // ~27% das calorias
+  fat: 55, // ~23% das calorias
+};
+
+const initialMeals: MockMeals = {
   breakfast: {
     title: "Café da Manhã",
-    totalCalories: 350,
-    foods: [
-      {
-        id: "1",
-        name: "Pão francês",
-        calories: 150,
-        portion: "50g (1 unidade)",
-      },
-      { id: "2", name: "Ovo cozido", calories: 70, portion: "50g (1 unidade)" },
-      {
-        id: "3",
-        name: "Banana prata",
-        calories: 89,
-        portion: "100g (1 unidade)",
-      },
-    ],
+    totalCalories: 0,
+    totalCarbs: 0,
+    totalProtein: 0,
+    totalFat: 0,
+    foods: [],
   },
   lunch: {
     title: "Almoço",
-    totalCalories: 650,
-    foods: [
-      { id: "4", name: "Arroz branco", calories: 128, portion: "100g" },
-      { id: "5", name: "Feijão carioca", calories: 76, portion: "100g" },
-      {
-        id: "6",
-        name: "Peito de frango grelhado",
-        calories: 159,
-        portion: "100g",
-      },
-      { id: "7", name: "Alface", calories: 15, portion: "50g" },
-    ],
+    totalCalories: 0,
+    totalCarbs: 0,
+    totalProtein: 0,
+    totalFat: 0,
+    foods: [],
   },
   dinner: {
     title: "Jantar",
-    totalCalories: 450,
-    foods: [
-      { id: "8", name: "Batata doce", calories: 86, portion: "100g" },
-      { id: "9", name: "Filé de peixe", calories: 170, portion: "100g" },
-      { id: "10", name: "Brócolis", calories: 34, portion: "100g" },
-    ],
+    totalCalories: 0,
+    totalCarbs: 0,
+    totalProtein: 0,
+    totalFat: 0,
+    foods: [],
   },
   snacks: {
     title: "Lanches",
     totalCalories: 0,
+    totalCarbs: 0,
+    totalProtein: 0,
+    totalFat: 0,
     foods: [],
   },
 };
 
 const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
   const { colors } = useTheme();
-
-  const handleAddFood = (mealType: MealType) => {
-    navigation.navigate("AddFood", { mealType });
-  };
-
-  const handleFoodPress = (food: FoodItem) => {
-    navigation.navigate("FoodDetail", { food });
-  };
-
-  const totalCalories = Object.values(mockMeals).reduce(
-    (sum, meal) => sum + meal.totalCalories,
-    0
+  const [meals, setMeals] = useState<MockMeals>(initialMeals);
+  const [selectedMealType, setSelectedMealType] = useState<MealType | null>(
+    null
   );
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Calcular totais diários
+  const dailyTotals = Object.values(meals).reduce(
+    (totals, meal) => {
+      return {
+        calories: totals.calories + meal.totalCalories,
+        carbs: totals.carbs + meal.totalCarbs,
+        protein: totals.protein + meal.totalProtein,
+        fat: totals.fat + meal.totalFat,
+      };
+    },
+    { calories: 0, carbs: 0, protein: 0, fat: 0 }
+  );
+
+  const handleAddFoodPress = (mealType: MealType) => {
+    setSelectedMealType(mealType);
+    setIsModalVisible(true);
+  };
+
+  const handleFoodSelect = (food: any, grams: number) => {
+    if (!selectedMealType) return;
+
+    // Calcular nutrientes com base na quantidade em gramas
+    const ratio = grams / food.portionWeight;
+    const calculatedFood: FoodItem = {
+      id: `${food.id}-${Date.now()}`,
+      name: food.name,
+      calories: Math.round(food.calories * ratio),
+      carbs: Math.round(food.carbs * ratio * 10) / 10,
+      protein: Math.round(food.protein * ratio * 10) / 10,
+      fat: Math.round(food.fat * ratio * 10) / 10,
+      portion: food.portion,
+      quantity: grams,
+    };
+
+    setMeals((prevMeals) => {
+      const updatedFoods = [
+        ...prevMeals[selectedMealType].foods,
+        calculatedFood,
+      ];
+
+      // Recalcular totais da refeição
+      const mealTotals = updatedFoods.reduce(
+        (total, item) => {
+          return {
+            calories: total.calories + item.calories,
+            carbs: total.carbs + item.carbs,
+            protein: total.protein + item.protein,
+            fat: total.fat + item.fat,
+          };
+        },
+        { calories: 0, carbs: 0, protein: 0, fat: 0 }
+      );
+
+      return {
+        ...prevMeals,
+        [selectedMealType]: {
+          ...prevMeals[selectedMealType],
+          foods: updatedFoods,
+          totalCalories: mealTotals.calories,
+          totalCarbs: mealTotals.carbs,
+          totalProtein: mealTotals.protein,
+          totalFat: mealTotals.fat,
+        },
+      };
+    });
+
+    setIsModalVisible(false);
+  };
+
+  const handleRemoveFood = (mealType: MealType, foodId: string) => {
+    setMeals((prevMeals) => {
+      const updatedFoods = prevMeals[mealType].foods.filter(
+        (food) => food.id !== foodId
+      );
+
+      // Recalcular totais da refeição
+      const mealTotals = updatedFoods.reduce(
+        (total, item) => {
+          return {
+            calories: total.calories + item.calories,
+            carbs: total.carbs + item.carbs,
+            protein: total.protein + item.protein,
+            fat: total.fat + item.fat,
+          };
+        },
+        { calories: 0, carbs: 0, protein: 0, fat: 0 }
+      );
+
+      return {
+        ...prevMeals,
+        [mealType]: {
+          ...prevMeals[mealType],
+          foods: updatedFoods,
+          totalCalories: mealTotals.calories,
+          totalCarbs: mealTotals.carbs,
+          totalProtein: mealTotals.protein,
+          totalFat: mealTotals.fat,
+        },
+      };
+    });
+  };
+
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+    };
+    return date.toLocaleDateString("pt-BR", options);
+  };
+
+  const changeDate = (days: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + days);
+    setCurrentDate(newDate);
+
+    // Em um app real, aqui você buscaria os dados do dia selecionado
+    // Por enquanto, vamos apenas resetar para o estado inicial
+    setMeals(initialMeals);
+  };
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
 
   return (
     <SafeAreaView
@@ -115,13 +241,13 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
       </View>
 
       <View style={styles.dateSelector}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => changeDate(-1)}>
           <Feather name="chevron-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.dateText, { color: colors.text }]}>
-          Hoje, 3 de Abril
+          {isToday(currentDate) ? "Hoje" : ""}, {formatDate(currentDate)}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => changeDate(1)}>
           <Feather name="chevron-right" size={24} color={colors.text} />
         </TouchableOpacity>
       </View>
@@ -135,46 +261,78 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
         <Text style={[styles.summaryTitle, { color: colors.text }]}>
           Resumo do Dia
         </Text>
-        <View style={styles.summaryContent}>
-          <View style={styles.summaryItem}>
-            <Text style={[styles.summaryValue, { color: colors.primary }]}>
-              {totalCalories}
+
+        <View style={styles.calorieProgress}>
+          <View style={styles.calorieHeader}>
+            <Text style={[styles.calorieValue, { color: colors.primary }]}>
+              {dailyTotals.calories}
             </Text>
-            <Text style={[styles.summaryLabel, { color: colors.gray }]}>
-              kcal consumidas
-            </Text>
-          </View>
-          <View style={styles.summaryItem}>
-            <Text style={[styles.summaryValue, { color: colors.text }]}>
-              2200
-            </Text>
-            <Text style={[styles.summaryLabel, { color: colors.gray }]}>
-              kcal meta
+            <Text style={[styles.calorieLabel, { color: colors.gray }]}>
+              / {DAILY_GOALS.calories} kcal
             </Text>
           </View>
-          <View style={styles.summaryItem}>
-            <Text style={[styles.summaryValue, { color: colors.text }]}>
-              85/150
-            </Text>
-            <Text style={[styles.summaryLabel, { color: colors.gray }]}>
-              g proteínas
-            </Text>
+
+          <View
+            style={[styles.progressBar, { backgroundColor: colors.border }]}
+          >
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  backgroundColor: colors.primary,
+                  width: `${Math.min(
+                    100,
+                    (dailyTotals.calories / DAILY_GOALS.calories) * 100
+                  )}%`,
+                },
+              ]}
+            />
           </View>
+        </View>
+
+        <View style={styles.macroContainer}>
+          <MacroProgressBar
+            label="Carboidratos"
+            current={dailyTotals.carbs}
+            target={DAILY_GOALS.carbs}
+            color="#4CAF50"
+          />
+          <MacroProgressBar
+            label="Proteínas"
+            current={dailyTotals.protein}
+            target={DAILY_GOALS.protein}
+            color="#2196F3"
+          />
+          <MacroProgressBar
+            label="Gorduras"
+            current={dailyTotals.fat}
+            target={DAILY_GOALS.fat}
+            color="#FF9800"
+          />
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {(Object.keys(mockMeals) as MealType[]).map((mealType) => (
+        {(Object.keys(meals) as MealType[]).map((mealType) => (
           <MealSection
             key={mealType}
-            title={mockMeals[mealType].title}
-            foods={mockMeals[mealType].foods}
-            totalCalories={mockMeals[mealType].totalCalories}
-            onAddFood={() => handleAddFood(mealType)}
-            onFoodPress={handleFoodPress}
+            title={meals[mealType].title}
+            foods={meals[mealType].foods}
+            totalCalories={meals[mealType].totalCalories}
+            totalCarbs={meals[mealType].totalCarbs}
+            totalProtein={meals[mealType].totalProtein}
+            totalFat={meals[mealType].totalFat}
+            onAddFood={() => handleAddFoodPress(mealType)}
+            onFoodPress={(food) => handleRemoveFood(mealType, food.id)}
           />
         ))}
       </ScrollView>
+
+      <FoodSearchModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSelectFood={handleFoodSelect}
+      />
     </SafeAreaView>
   );
 };
@@ -217,20 +375,33 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 12,
   },
-  summaryContent: {
+  calorieProgress: {
+    marginBottom: 16,
+  },
+  calorieHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "baseline",
+    marginBottom: 8,
   },
-  summaryItem: {
-    alignItems: "center",
+  calorieValue: {
+    fontSize: 24,
+    fontWeight: "700",
   },
-  summaryValue: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 4,
+  calorieLabel: {
+    fontSize: 16,
+    marginLeft: 4,
   },
-  summaryLabel: {
-    fontSize: 12,
+  progressBar: {
+    height: 10,
+    borderRadius: 5,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 5,
+  },
+  macroContainer: {
+    marginTop: 8,
   },
   content: {
     padding: 20,
