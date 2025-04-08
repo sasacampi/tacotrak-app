@@ -19,22 +19,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is already logged in
   useEffect(() => {
-    // In a real app, this would check for a stored token or session
-    // For this mock, we'll just simulate a loading state
     setTimeout(() => {
       setIsLoading(false);
-      // Default to not authenticated
       setIsAuthenticated(false);
     }, 1000);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // In a real app, this would make an API call to authenticate
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Mock credentials check
         if (email === "user@example.com" && password === "password123") {
           setIsAuthenticated(true);
           resolve(true);
@@ -46,7 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    // In a real app, this would clear tokens/session
     setIsAuthenticated(false);
   };
 
@@ -55,10 +48,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     email: string,
     password: string
   ): Promise<boolean> => {
-    // In a real app, this would make an API call to register
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Mock successful registration
         setIsAuthenticated(true);
         resolve(true);
       }, 1000);
@@ -87,3 +78,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+export default AuthProvider;

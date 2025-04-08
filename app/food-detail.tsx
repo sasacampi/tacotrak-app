@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "./context/ThemeContext";
@@ -16,7 +17,6 @@ import Slider from "@react-native-community/slider";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 
-// Type definitions
 type FoodItem = {
   id: string;
   name: string;
@@ -28,32 +28,46 @@ type FoodItem = {
   fat?: number;
 };
 
-type FoodDetailScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, "FoodDetail">;
-  route: {
-    params: {
-      food: FoodItem;
-    };
-  };
-};
+type FoodDetailRouteProp = RouteProp<RootStackParamList, "FoodDetail">;
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "FoodDetail"
+>;
 
 type MealOption = "Café da Manhã" | "Almoço" | "Jantar" | "Lanche";
 
-const FoodDetailScreen = ({ route, navigation }: FoodDetailScreenProps) => {
-  const { food } = route.params;
+const FoodDetailScreen = () => {
+  const route = useRoute<FoodDetailRouteProp>();
+  const navigation = useNavigation<NavigationProp>();
+  const params = route.params;
+  const food = params?.food;
+
+  if (!food) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text style={{ color: "red" }}>
+          Erro: Nenhum alimento foi fornecido.
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
   const { colors } = useTheme();
   const [quantity, setQuantity] = useState<number>(100);
   const [selectedMeal, setSelectedMeal] = useState<MealOption>("Café da Manhã");
 
   const meals: MealOption[] = ["Café da Manhã", "Almoço", "Jantar", "Lanche"];
 
-  // Calculate nutrition based on quantity
   const calculateNutrition = (baseValue: number): number => {
     return Math.round((baseValue / 100) * quantity);
   };
 
   const handleAddFood = () => {
-    // Here you would add the food to the meal diary
     navigation.navigate("Dashboard");
   };
 

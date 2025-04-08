@@ -12,9 +12,7 @@ import { useTheme } from "../context/ThemeContext";
 import ProgressRing from "../../components/ProgressRing";
 import MacroBar from "../../components/MacroBar";
 import Button from "../../components/Button";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../types/navigation";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useRouter } from "expo-router";
 
 type Macro = {
   current: number;
@@ -24,8 +22,7 @@ type Macro = {
 
 export default function DashboardScreen() {
   const { colors } = useTheme();
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const router = useRouter();
 
   // Mock data
   const dailyGoal = 2200;
@@ -40,15 +37,15 @@ export default function DashboardScreen() {
   };
 
   const handleAddMeal = () => {
-    navigation.navigate("AddFood", { mealType: undefined });
+    router.push("/add-food");
   };
 
   const handleViewDiary = () => {
-    navigation.navigate("MealDiary");
+    router.push("/meal-diary");
   };
 
   const handleViewProfile = () => {
-    navigation.navigate("Profile");
+    router.push("/profile");
   };
 
   return (

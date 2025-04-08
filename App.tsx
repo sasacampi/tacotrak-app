@@ -15,7 +15,20 @@ import TDEECalculatorScreen from "./app/(tabs)/tdee";
 import MealDiaryScreen from "./app/(tabs)/meal-diary";
 import ProfileScreen from "./app/(tabs)/profile";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Splash: undefined;
+  Login: undefined;
+  Register: undefined;
+  Onboarding: undefined;
+  Dashboard: undefined;
+  AddFood: { mealType?: string };
+  FoodDetail: { food: any };
+  TDEECalculator: undefined;
+  MealDiary: undefined;
+  Profile: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -36,7 +49,11 @@ export default function App() {
               <Stack.Screen name="Onboarding" component={OnboardingScreen} />
               <Stack.Screen name="Dashboard" component={DashboardScreen} />
               <Stack.Screen name="AddFood" component={AddFoodScreen} />
-              <Stack.Screen name="FoodDetail" component={FoodDetailScreen} />
+              <Stack.Screen
+                name="FoodDetail"
+                component={FoodDetailScreen}
+                options={{ headerShown: true, title: "Food Details" }}
+              />
               <Stack.Screen
                 name="TDEECalculator"
                 component={TDEECalculatorScreen}

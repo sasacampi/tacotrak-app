@@ -66,3 +66,5 @@ export const useTheme = () => {
   }
   return context;
 };
+
+export default ThemeProvider;

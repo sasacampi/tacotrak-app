@@ -1,10 +1,13 @@
 import { Slot } from "expo-router";
-import { ThemeProvider } from "@/app/context/ThemeContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <Slot />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <Slot />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

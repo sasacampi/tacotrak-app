@@ -13,8 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "./context/ThemeContext";
 import FoodItem from "../components/FoodItem";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/navigation";
+import { useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 // Type definitions
 type FoodItemType = {
@@ -25,16 +25,7 @@ type FoodItemType = {
   category: string;
 };
 
-type AddFoodScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, "AddFood">;
-  route: {
-    params?: {
-      mealType?: string;
-    };
-  };
-};
-
-// Mock data for TACO foods
+// Mock data
 const mockFoods: FoodItemType[] = [
   {
     id: "1",
@@ -121,8 +112,10 @@ const categories = [
 
 type Category = (typeof categories)[number];
 
-const AddFoodScreen = ({ navigation, route }: AddFoodScreenProps) => {
+export default function AddFoodScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
+  const params = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category>("Todos");
 
@@ -136,7 +129,10 @@ const AddFoodScreen = ({ navigation, route }: AddFoodScreenProps) => {
   });
 
   const handleFoodPress = (food: FoodItemType) => {
-    navigation.navigate("FoodDetail", { food });
+    router.push({
+      pathname: "/food-detail",
+      params: { foodId: food.id },
+    });
   };
 
   return (
@@ -144,7 +140,7 @@ const AddFoodScreen = ({ navigation, route }: AddFoodScreenProps) => {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Feather name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>
@@ -234,7 +230,7 @@ const AddFoodScreen = ({ navigation, route }: AddFoodScreenProps) => {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -300,5 +296,3 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
-
-export default AddFoodScreen;
