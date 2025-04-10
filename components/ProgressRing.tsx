@@ -54,9 +54,21 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
         />
       </Svg>
       <View style={styles.textContainer}>
-        <Text style={[styles.text, { color: colors.text }]}>{text}</Text>
+        <Text
+          style={[
+            styles.text,
+            { color: colors.text, fontFamily: "Poppins-Bold" },
+          ]}
+        >
+          {text}
+        </Text>
         {subText && (
-          <Text style={[styles.subText, { color: colors.gray }]}>
+          <Text
+            style={[
+              styles.subText,
+              { color: colors.gray, fontFamily: "Poppins-Regular" },
+            ]}
+          >
             {subText}
           </Text>
         )}
@@ -76,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
   },

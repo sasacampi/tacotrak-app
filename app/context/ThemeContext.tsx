@@ -1,15 +1,9 @@
 "use client";
 
 import type React from "react";
-import { createContext, useState, useContext } from "react";
-import { useColorScheme } from "react-native";
-
-type ThemeType = "light" | "dark" | "system";
+import { createContext, useContext } from "react";
 
 interface ThemeContextType {
-  theme: ThemeType;
-  setTheme: (theme: ThemeType) => void;
-  isDarkMode: boolean;
   colors: {
     background: string;
     card: string;
@@ -31,31 +25,24 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const colorScheme = useColorScheme();
-  const [theme, setTheme] = useState<ThemeType>("system");
-
-  const isDarkMode =
-    theme === "system" ? colorScheme === "dark" : theme === "dark";
-
+  // Fixed light theme colors
   const colors = {
-    background: isDarkMode ? "#121212" : "#FFFFFF",
-    card: isDarkMode ? "#1E1E1E" : "#F5F5F5",
-    text: isDarkMode ? "#FFFFFF" : "#000000",
-    border: isDarkMode ? "#2C2C2C" : "#E0E0E0",
-    primary: "#4CAF50", // Green for nutrition theme
-    secondary: "#8BC34A", // Light green
-    accent: "#CDDC39", // Lime
+    background: "#FFFFFF",
+    card: "#FFFFFF",
+    text: "#333333",
+    border: "#F0F0F0",
+    primary: "#5E60CE", // Vibrant purple
+    secondary: "#64DFDF", // Teal
+    accent: "#72EFDD", // Mint
     success: "#4CAF50",
     warning: "#FFC107",
     danger: "#F44336",
-    gray: isDarkMode ? "#AAAAAA" : "#757575",
-    lightGray: isDarkMode ? "#2C2C2C" : "#EEEEEE",
+    gray: "#9E9E9E",
+    lightGray: "#F5F5F5",
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDarkMode, colors }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ colors }}>{children}</ThemeContext.Provider>
   );
 };
 
@@ -66,5 +53,3 @@ export const useTheme = () => {
   }
   return context;
 };
-
-export default ThemeProvider;
