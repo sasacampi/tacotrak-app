@@ -165,3 +165,5 @@ export const useMeals = () => {
   }
   return context;
 };
+
+export default MealsProvider;

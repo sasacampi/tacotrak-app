@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 
 import {
   View,
@@ -10,205 +11,343 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
-import ProgressRing from "../../components/ProgressRing";
-import Button from "../../components/Button";
-import type { ScreenProps } from "../../types/navigation";
+import type { TabScreenProps } from "../../types/navigation";
 
-const DashboardScreen = ({ navigation }: ScreenProps<"Dashboard">) => {
+// Mock data for the weekly progress chart
+const weeklyData = [
+  { day: "Mon", calories: 1800, protein: 90, fat: 60 },
+  { day: "Tue", calories: 2100, protein: 110, fat: 70 },
+  { day: "Wed", calories: 2300, protein: 120, fat: 75 },
+  { day: "Thu", calories: 1900, protein: 95, fat: 65 },
+  { day: "Fri", calories: 2000, protein: 100, fat: 68 },
+  { day: "Sat", calories: 2200, protein: 115, fat: 72 },
+  { day: "Sun", calories: 2100, protein: 105, fat: 70 },
+];
+
+const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
   const { colors } = useTheme();
+  const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
 
-  // Mock data
-  const dailyGoal = 2000;
-  const consumed = 1200;
-  const remaining = dailyGoal - consumed;
-  const progress = consumed / dailyGoal;
+  // Dados estáticos para as refeições
+  const meals = {
+    breakfast: { totalCalories: 450 },
+    lunch: { totalCalories: 750 },
+    dinner: { totalCalories: 650 },
+    snacks: { totalCalories: 350 },
+  };
+  const totalCalories = 2200;
 
-  const macros = {
-    protein: { current: 85, target: 130, color: "#FF6B6B" },
-    carbs: { current: 145, target: 250, color: "#4ECDC4" },
-    fat: { current: 35, target: 65, color: "#FFD166" },
+  // Mock user data
+  const userData = {
+    currentWeight: 56.0,
+    weightChange: -0.45,
+    percentageChange: -0.5,
+    goalWeight: 52.0,
+    heartRate: 97,
+    water: 1200,
+    steps: 8432,
+    sleep: "7h 23m",
   };
 
-  const meals = [
-    {
-      id: "1",
-      type: "Breakfast",
-      name: "Oatmeal with fruits",
-      calories: 320,
-      icon: "coffee",
-    },
-    {
-      id: "2",
-      type: "Lunch",
-      name: "Grilled chicken salad",
-      calories: 450,
-      icon: "clipboard",
-    },
-    {
-      id: "3",
-      type: "Snack",
-      name: "Apple and almonds",
-      calories: 180,
-      icon: "package",
-    },
-  ];
-
-  const handleAddMeal = () => {
-    navigation.navigate({ name: "AddFood", params: {} }); // ou { mealType: "Lunch" } por exemplo
-  };
-
-  const handleViewDiary = () => {
-    navigation.navigate({ name: "MealDiary", params: undefined });
-  };
-
-  const handleViewProfile = () => {
-    navigation.navigate({ name: "Profile", params: undefined });
-  };
+  // Calculate the maximum value for scaling the chart bars
+  const maxCalories = Math.max(...weeklyData.map((day) => day.calories));
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>
+          Dashboard
+        </Text>
+        <TouchableOpacity>
+          <Feather name="more-vertical" size={24} color={colors.text} />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View>
-            <Text style={[styles.greeting, { color: colors.text }]}>
-              Olá, User!
-            </Text>
-            <Text style={[styles.subtitle, { color: colors.gray }]}>
-              Monitore suas calorias do dia.
-            </Text>
-          </View>
-          <TouchableOpacity onPress={handleViewProfile}>
-            <View
-              style={[
-                styles.profileButton,
-                { backgroundColor: colors.primary + "20" },
-              ]}
-            >
-              <Feather name="user" size={20} color={colors.primary} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
+        {/* Weight Goal Card */}
         <View
           style={[
-            styles.calorieCard,
+            styles.card,
             { backgroundColor: colors.card, borderColor: colors.border },
           ]}
         >
-          <View style={styles.calorieContent}>
-            <View style={styles.ringContainer}>
-              <ProgressRing
-                progress={progress}
-                size={140}
-                strokeWidth={12}
-                text={`${consumed}`}
-                subText="of ${dailyGoal} kcal"
-                color={colors.primary}
-              />
+          <View style={styles.cardHeader}>
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              Losing Weight Goal
+            </Text>
+            <TouchableOpacity>
+              <Feather name="more-horizontal" size={20} color={colors.gray} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.weightStats}>
+            <View style={styles.weightStat}>
+              <Text style={[styles.weightValue, { color: colors.text }]}>
+                {userData.currentWeight} kg
+              </Text>
+              <Text style={[styles.weightLabel, { color: colors.gray }]}>
+                Goal Weight
+              </Text>
             </View>
 
-            <View style={styles.macrosContainer}>
-              <View style={styles.macroItem}>
-                <Text
-                  style={[styles.macroValue, { color: macros.protein.color }]}
-                >
-                  {macros.protein.current}g
-                  <Text style={[styles.macroTarget, { color: colors.gray }]}>
-                    /{macros.protein.target}g
-                  </Text>
-                </Text>
-                <Text style={[styles.macroLabel, { color: colors.text }]}>
-                  Protein
-                </Text>
-              </View>
+            <View style={styles.weightStat}>
+              <Text style={[styles.weightChange, { color: colors.primary }]}>
+                {userData.weightChange} kg
+              </Text>
+              <Text style={[styles.weightLabel, { color: colors.gray }]}>
+                Goal Rate
+              </Text>
+            </View>
 
-              <View style={styles.macroItem}>
-                <Text
-                  style={[styles.macroValue, { color: macros.carbs.color }]}
-                >
-                  {macros.carbs.current}g
-                  <Text style={[styles.macroTarget, { color: colors.gray }]}>
-                    /{macros.carbs.target}g
-                  </Text>
-                </Text>
-                <Text style={[styles.macroLabel, { color: colors.text }]}>
-                  Carbs
-                </Text>
-              </View>
-
-              <View style={styles.macroItem}>
-                <Text style={[styles.macroValue, { color: macros.fat.color }]}>
-                  {macros.fat.current}g
-                  <Text style={[styles.macroTarget, { color: colors.gray }]}>
-                    /{macros.fat.target}g
-                  </Text>
-                </Text>
-                <Text style={[styles.macroLabel, { color: colors.text }]}>
-                  Fat
-                </Text>
-              </View>
+            <View style={styles.weightStat}>
+              <Text style={[styles.weightChange, { color: colors.primary }]}>
+                {userData.percentageChange} %
+              </Text>
+              <Text style={[styles.weightLabel, { color: colors.gray }]}>
+                Goal Rate
+              </Text>
             </View>
           </View>
         </View>
 
-        <View style={styles.mealsSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Today's Meals
+        {/* Progress Section */}
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          Your Progress
+        </Text>
+
+        {/* Coached Program Card */}
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
+          <View style={styles.cardHeader}>
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              Coached Program
             </Text>
-            <TouchableOpacity onPress={handleViewDiary}>
-              <Text style={[styles.sectionAction, { color: colors.primary }]}>
-                See All
-              </Text>
+            <TouchableOpacity>
+              <Feather name="more-horizontal" size={20} color={colors.gray} />
             </TouchableOpacity>
           </View>
 
-          {meals.map((meal) => (
-            <TouchableOpacity
-              key={meal.id}
-              style={[
-                styles.mealCard,
-                { backgroundColor: colors.card, borderColor: colors.border },
-              ]}
-              onPress={() => navigation.navigate("MealDiary")}
-            >
+          <View style={styles.legendContainer}>
+            <View style={styles.legendItem}>
               <View
-                style={[
-                  styles.mealIconContainer,
-                  { backgroundColor: colors.primary + "15" },
-                ]}
-              >
-                <Feather name={meal.icon} size={18} color={colors.primary} />
-              </View>
-              <View style={styles.mealInfo}>
-                <Text style={[styles.mealType, { color: colors.gray }]}>
-                  {meal.type}
-                </Text>
-                <Text style={[styles.mealName, { color: colors.text }]}>
-                  {meal.name}
-                </Text>
-              </View>
-              <Text style={[styles.mealCalories, { color: colors.primary }]}>
-                {meal.calories}
-                <Text style={[styles.mealCaloriesUnit, { color: colors.gray }]}>
-                  {" "}
-                  kcal
-                </Text>
+                style={[styles.legendColor, { backgroundColor: "#4CAF50" }]}
+              />
+              <Text style={[styles.legendText, { color: colors.gray }]}>
+                Calories
               </Text>
-            </TouchableOpacity>
-          ))}
+            </View>
+            <View style={styles.legendItem}>
+              <View
+                style={[styles.legendColor, { backgroundColor: "#FFA726" }]}
+              />
+              <Text style={[styles.legendText, { color: colors.gray }]}>
+                Protein
+              </Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View
+                style={[styles.legendColor, { backgroundColor: "#BA68C8" }]}
+              />
+              <Text style={[styles.legendText, { color: colors.gray }]}>
+                Fat
+              </Text>
+            </View>
 
-          <Button
-            title="Add Meal"
-            onPress={handleAddMeal}
-            icon={<Feather name="plus" size={18} color="#FFF" />}
-            style={styles.addMealButton}
-          />
+            <TouchableOpacity style={styles.periodSelector}>
+              <Text style={[styles.periodText, { color: colors.text }]}>
+                {selectedPeriod}
+              </Text>
+              <Feather name="chevron-down" size={16} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.chartContainer}>
+            {weeklyData.map((day, index) => (
+              <View key={index} style={styles.chartColumn}>
+                <View style={styles.barContainer}>
+                  {/* Fat bar */}
+                  <View
+                    style={[
+                      styles.barSegment,
+                      {
+                        backgroundColor: "#BA68C8",
+                        height: (day.fat / maxCalories) * 120,
+                      },
+                    ]}
+                  />
+                  {/* Protein bar */}
+                  <View
+                    style={[
+                      styles.barSegment,
+                      {
+                        backgroundColor: "#FFA726",
+                        height: (day.protein / maxCalories) * 120,
+                      },
+                    ]}
+                  />
+                  {/* Calories bar */}
+                  <View
+                    style={[
+                      styles.barSegment,
+                      {
+                        backgroundColor: "#4CAF50",
+                        height: (day.calories / maxCalories) * 120,
+                      },
+                    ]}
+                  />
+                </View>
+                <Text style={[styles.dayLabel, { color: colors.gray }]}>
+                  {day.day}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Health Metrics Row */}
+        <View style={styles.metricsRow}>
+          {/* Heart Rate Card */}
+          <View
+            style={[
+              styles.metricCard,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.metricHeader}>
+                <View
+                  style={[styles.metricIcon, { backgroundColor: "#FFCDD2" }]}
+                >
+                  <Feather name="heart" size={16} color="#F44336" />
+                </View>
+                <Text style={[styles.metricTitle, { color: colors.text }]}>
+                  Heart Rate
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <Feather name="more-horizontal" size={20} color={colors.gray} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.metricValueContainer}>
+              <Text style={[styles.metricValue, { color: colors.text }]}>
+                {userData.heartRate}
+              </Text>
+              <Text style={[styles.metricUnit, { color: colors.gray }]}>
+                bpm
+              </Text>
+            </View>
+          </View>
+
+          {/* Water Card */}
+          <View
+            style={[
+              styles.metricCard,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.metricHeader}>
+                <View
+                  style={[styles.metricIcon, { backgroundColor: "#BBDEFB" }]}
+                >
+                  <Feather name="droplet" size={16} color="#2196F3" />
+                </View>
+                <Text style={[styles.metricTitle, { color: colors.text }]}>
+                  Water
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <Feather name="more-horizontal" size={20} color={colors.gray} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.metricValueContainer}>
+              <Text style={[styles.metricValue, { color: colors.text }]}>
+                {userData.water}
+              </Text>
+              <Text style={[styles.metricUnit, { color: colors.gray }]}>
+                ml
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Activity Metrics Row */}
+        <View style={styles.metricsRow}>
+          {/* Steps Card */}
+          <View
+            style={[
+              styles.metricCard,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.metricHeader}>
+                <View
+                  style={[styles.metricIcon, { backgroundColor: "#E8F5E9" }]}
+                >
+                  <Feather name="activity" size={16} color="#4CAF50" />
+                </View>
+                <Text style={[styles.metricTitle, { color: colors.text }]}>
+                  Walk Steps
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <Feather name="more-horizontal" size={20} color={colors.gray} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.metricValueContainer}>
+              <Text style={[styles.metricValue, { color: colors.text }]}>
+                {userData.steps}
+              </Text>
+              <Text style={[styles.metricUnit, { color: colors.gray }]}>
+                steps
+              </Text>
+            </View>
+          </View>
+
+          {/* Sleep Card */}
+          <View
+            style={[
+              styles.metricCard,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.metricHeader}>
+                <View
+                  style={[styles.metricIcon, { backgroundColor: "#E1BEE7" }]}
+                >
+                  <Feather name="moon" size={16} color="#9C27B0" />
+                </View>
+                <Text style={[styles.metricTitle, { color: colors.text }]}>
+                  Sleep
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <Feather name="more-horizontal" size={20} color={colors.gray} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.metricValueContainer}>
+              <Text style={[styles.metricValue, { color: colors.text }]}>
+                {userData.sleep}
+              </Text>
+              <Text style={[styles.metricUnit, { color: colors.gray }]}>
+                hours
+              </Text>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -219,130 +358,165 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
-  greeting: {
-    fontSize: 24,
-    fontWeight: "700",
-    fontFamily: "Poppins-Bold",
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
-  subtitle: {
-    fontSize: 14,
-    fontFamily: "Poppins-Regular",
-  },
-  profileButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  calorieCard: {
-    borderRadius: 16,
+  content: {
     padding: 20,
+    paddingBottom: 100,
+  },
+  card: {
+    borderRadius: 16,
+    padding: 16,
     marginBottom: 24,
     borderWidth: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
   },
-  calorieContent: {
+  cardHeader: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-  },
-  ringContainer: {
-    flex: 1,
     alignItems: "center",
-  },
-  macrosContainer: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  macroItem: {
     marginBottom: 16,
   },
-  macroValue: {
+  cardTitle: {
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
   },
-  macroTarget: {
-    fontSize: 14,
-    fontFamily: "Poppins-Regular",
-  },
-  macroLabel: {
-    fontSize: 14,
-    fontFamily: "Poppins-Regular",
-  },
-  mealsSection: {
-    marginBottom: 20,
-  },
-  sectionHeader: {
+  weightStats: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
+  },
+  weightStat: {
+    alignItems: "flex-start",
+  },
+  weightValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
+    marginBottom: 4,
+  },
+  weightChange: {
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
+    marginBottom: 4,
+  },
+  weightLabel: {
+    fontSize: 12,
+    fontFamily: "Poppins-Regular",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
+    marginBottom: 16,
   },
-  sectionAction: {
-    fontSize: 14,
-    fontFamily: "Poppins-Medium",
-  },
-  mealCard: {
+  legendContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 1,
+    marginBottom: 16,
   },
-  mealIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: "center",
+  legendItem: {
+    flexDirection: "row",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 16,
   },
-  mealInfo: {
+  legendColor: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 4,
+  },
+  legendText: {
+    fontSize: 12,
+    fontFamily: "Poppins-Regular",
+  },
+  periodSelector: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "auto",
+  },
+  periodText: {
+    fontSize: 14,
+    fontFamily: "Poppins-Medium",
+    marginRight: 4,
+  },
+  chartContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    height: 150,
+  },
+  chartColumn: {
+    alignItems: "center",
     flex: 1,
   },
-  mealType: {
+  barContainer: {
+    width: 24,
+    height: 120,
+    justifyContent: "flex-end",
+  },
+  barSegment: {
+    width: "100%",
+    borderRadius: 2,
+    marginBottom: 1,
+  },
+  dayLabel: {
     fontSize: 12,
-    marginBottom: 4,
+    marginTop: 8,
     fontFamily: "Poppins-Regular",
   },
-  mealName: {
+  metricsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  metricCard: {
+    flex: 1,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    marginHorizontal: 4,
+  },
+  metricHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  metricIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  metricTitle: {
     fontSize: 14,
-    fontWeight: "500",
     fontFamily: "Poppins-Medium",
   },
-  mealCalories: {
-    fontSize: 16,
-    fontWeight: "600",
-    fontFamily: "Poppins-SemiBold",
+  metricValueContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginTop: 12,
   },
-  mealCaloriesUnit: {
-    fontSize: 12,
+  metricValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
+  },
+  metricUnit: {
+    fontSize: 14,
+    marginLeft: 4,
     fontFamily: "Poppins-Regular",
-  },
-  addMealButton: {
-    marginTop: 8,
   },
 });
 

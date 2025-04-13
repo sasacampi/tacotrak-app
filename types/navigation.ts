@@ -1,7 +1,7 @@
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RouteProp } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
-// Tipo para os itens alimentares
 export type FoodItem = {
   id: string;
   name: string;
@@ -13,21 +13,26 @@ export type FoodItem = {
   fat?: number;
 };
 
-// Lista de telas e seus parâmetros
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
   Register: undefined;
   Onboarding: undefined;
-  Dashboard: undefined;
+  MainTabs: undefined;
   AddFood: { mealType?: string };
-  FoodDetail: { food: FoodItem };
+  FoodDetail: { foodId: string };
   TDEECalculator: undefined;
-  MealDiary: undefined;
   Profile: undefined;
 };
 
-// Tipos de navegação e rota
+export type MainTabParamList = {
+  Dashboard: undefined;
+  MealDiary: undefined;
+  AddFood: undefined;
+  Macros: undefined;
+  Profile: undefined;
+};
+
 export type AppNavigationProp<T extends keyof RootStackParamList> =
   NativeStackNavigationProp<RootStackParamList, T>;
 
@@ -36,11 +41,23 @@ export type AppRouteProp<T extends keyof RootStackParamList> = RouteProp<
   T
 >;
 
-// Tipo genérico para props de uma tela
 export interface ScreenProps<T extends keyof RootStackParamList> {
   navigation: AppNavigationProp<T>;
   route: AppRouteProp<T>;
 }
 
-// Tipo específico para a tela MealDiary
-export type MealDiaryScreenProps = ScreenProps<"MealDiary">;
+export type TabNavigationProp<T extends keyof MainTabParamList> =
+  BottomTabScreenProps<MainTabParamList, T>;
+
+export interface TabScreenProps<T extends keyof MainTabParamList> {
+  navigation: TabNavigationProp<T>["navigation"];
+  route: TabNavigationProp<T>["route"];
+}
+
+export type MealDiaryScreenProps = TabScreenProps<"MealDiary">;
+export type DashboardScreenProps = TabScreenProps<"Dashboard">;
+export type ProfileScreenProps = TabScreenProps<"Profile">;
+export type TDEECalculatorScreenProps = TabScreenProps<"Macros">;
+export type AddFoodScreenProps =
+  | TabScreenProps<"AddFood">
+  | ScreenProps<"AddFood">;

@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import Button from "../../components/Button";
-import type { ScreenProps } from "../../types/navigation";
+import type { TabScreenProps } from "../../types/navigation";
 
 interface UserData {
   gender: "male" | "female";
@@ -30,9 +30,7 @@ interface ActivityLevel {
   factor: number;
 }
 
-const TDEECalculatorScreen = ({
-  navigation,
-}: ScreenProps<"TDEECalculator">) => {
+const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
   const { colors } = useTheme();
   const [userData, setUserData] = useState<UserData>({
     gender: "male",
