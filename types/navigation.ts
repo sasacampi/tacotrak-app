@@ -23,11 +23,12 @@ export type RootStackParamList = {
   FoodDetail: { foodId: string };
   TDEECalculator: undefined;
   Profile: undefined;
+  MealDiary: { date: string };
 };
 
 export type MainTabParamList = {
   Dashboard: undefined;
-  MealDiary: undefined;
+  MealDiary: { date: string };
   AddFood: undefined;
   Macros: undefined;
   Profile: undefined;
