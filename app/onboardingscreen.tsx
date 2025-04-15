@@ -16,8 +16,8 @@ import Button from "../components/Button";
 import { Picker } from "@react-native-picker/picker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import DashboardScreen from "./(tabs)/index";
 
-// Type definitions
 type UserData = {
   name: string;
   age: string;
@@ -49,7 +49,9 @@ const OnboardingScreen = ({ navigation }: OnboardingScreenProps) => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      navigation.navigate("Dashboard");
+      navigation.navigate("MainTabs", {
+        screen: "Dashboard",
+      });
     }
   };
 

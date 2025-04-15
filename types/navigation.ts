@@ -18,7 +18,9 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Onboarding: undefined;
-  MainTabs: undefined;
+  MainTabs: {
+    screen: keyof MainTabParamList;
+  };
   AddFood: { mealType?: string };
   FoodDetail: { foodId: string };
   TDEECalculator: undefined;
