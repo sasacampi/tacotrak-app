@@ -26,7 +26,7 @@ import { View } from "react-native";
 import type { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
-import { RootStackParamList, MainTabParamList } from "./types/navigation";
+import type { RootStackParamList, MainTabParamList } from "./types/navigation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -54,7 +54,7 @@ function MainTabs() {
 
             return <Feather name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "#5E60CE",
+          tabBarActiveTintColor: "#007AFF",
           tabBarInactiveTintColor: "#9E9E9E",
           tabBarStyle: {
             paddingBottom: 5,
@@ -92,7 +92,7 @@ function MainTabs() {
                   width: 56,
                   height: 56,
                   borderRadius: 28,
-                  backgroundColor: "#5E60CE",
+                  backgroundColor: "#007AFF",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: 28,

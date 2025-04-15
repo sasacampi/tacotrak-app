@@ -55,16 +55,17 @@ const MealSection: React.FC<MealSectionProps> = ({
     }
   };
 
+  // Get meal color based on title
   const getMealColor = () => {
     switch (title) {
       case "Café da Manhã":
-        return "#007AFF";
+        return "#4CAF50"; // Green
       case "Almoço":
-        return "#007AFF";
+        return "#FFA726"; // Orange
       case "Jantar":
-        return "#007AFF";
+        return "#7E57C2"; // Purple
       case "Lanches":
-        return "#007AFF";
+        return "#007AFF"; // Blue
       default:
         return colors.primary;
     }

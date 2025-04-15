@@ -18,7 +18,8 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
 }) => {
   const { colors } = useTheme();
 
-  const size = 95;
+  // Circle progress calculations
+  const size = 80;
   const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -37,6 +38,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
 
         <View style={styles.circleContainer}>
           <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+            {/* Background circle */}
             <Circle
               cx={size / 2}
               cy={size / 2}
@@ -45,6 +47,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
               strokeWidth={strokeWidth}
               fill="transparent"
             />
+            {/* Progress circle */}
             <Circle
               cx={size / 2}
               cy={size / 2}
