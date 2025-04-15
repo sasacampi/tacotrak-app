@@ -2,20 +2,15 @@
 
 import type React from "react";
 import { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import MealSection from "../../components/MealSection";
 import FoodSearchModal from "../../components/FoodSearchModal";
-import MacroProgressBar from "../../components/MacroProgressBar";
 import type { AppNavigationProp } from "../../types/navigation";
+import MacroNutrientSummary from "../../components/MacroNutrientSummary";
+import DateSelector from "../../components/DateSelector";
+import ProgressCard from "../../components/ProgressCard";
 
 type FoodItem = {
   id: string;
@@ -45,12 +40,11 @@ type MealDiaryScreenProps = {
   navigation: AppNavigationProp<"MealDiary">;
 };
 
-// Metas diárias
 const DAILY_GOALS = {
   calories: 2200,
-  carbs: 275, // ~50% das calorias
-  protein: 150, // ~27% das calorias
-  fat: 55, // ~23% das calorias
+  carbs: 359,
+  protein: 143,
+  fat: 359,
 };
 
 const initialMeals: MockMeals = {
@@ -95,9 +89,14 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Calcular totais diários
+  const demoMacros = {
+    carbs: { current: 281, target: 359 },
+    protein: { current: 20, target: 143 },
+    fat: { current: 169, target: 359 },
+  };
+
   const dailyTotals = Object.values(meals).reduce(
     (totals, meal) => {
       return {
@@ -118,7 +117,6 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
   const handleFoodSelect = (food: any, grams: number) => {
     if (!selectedMealType) return;
 
-    // Calcular nutrientes com base na quantidade em gramas
     const ratio = grams / food.portionWeight;
     const calculatedFood: FoodItem = {
       id: `${food.id}-${Date.now()}`,
@@ -137,7 +135,6 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
         calculatedFood,
       ];
 
-      // Recalcular totais da refeição
       const mealTotals = updatedFoods.reduce(
         (total, item) => {
           return {
@@ -172,7 +169,6 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
         (food) => food.id !== foodId
       );
 
-      // Recalcular totais da refeição
       const mealTotals = updatedFoods.reduce(
         (total, item) => {
           return {
@@ -199,120 +195,45 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
     });
   };
 
-  const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "long",
-    };
-    return date.toLocaleDateString("pt-BR", options);
-  };
-
-  const changeDate = (days: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() + days);
-    setCurrentDate(newDate);
-
-    // Em um app real, aqui você buscaria os dados do dia selecionado
-    // Por enquanto, vamos apenas resetar para o estado inicial
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
     setMeals(initialMeals);
   };
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
+  const formatProgressDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+    return date.toLocaleDateString("en-US", options);
   };
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Diário de Refeições
-        </Text>
-        <View style={{ width: 24 }} />
-      </View>
-
-      <View style={styles.dateSelector}>
-        <TouchableOpacity onPress={() => changeDate(-1)}>
-          <Feather name="chevron-left" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.dateText, { color: colors.text }]}>
-          {isToday(currentDate) ? "Hoje" : ""}, {formatDate(currentDate)}
-        </Text>
-        <TouchableOpacity onPress={() => changeDate(1)}>
-          <Feather name="chevron-right" size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={[
-          styles.summaryCard,
-          { backgroundColor: colors.card, borderColor: colors.border },
-        ]}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={[styles.summaryTitle, { color: colors.text }]}>
-          Resumo do Dia
-        </Text>
+        <DateSelector
+          selectedDate={selectedDate}
+          onSelectDate={handleDateSelect}
+        />
 
-        <View style={styles.calorieProgress}>
-          <View style={styles.calorieHeader}>
-            <Text style={[styles.calorieValue, { color: colors.primary }]}>
-              {dailyTotals.calories}
-            </Text>
-            <Text style={[styles.calorieLabel, { color: colors.gray }]}>
-              / {DAILY_GOALS.calories} kcal
-            </Text>
-          </View>
+        <ProgressCard
+          percentage={92}
+          calories={1480}
+          date={formatProgressDate(selectedDate)}
+        />
 
-          <View
-            style={[styles.progressBar, { backgroundColor: colors.border }]}
-          >
-            <View
-              style={[
-                styles.progressFill,
-                {
-                  backgroundColor: colors.primary,
-                  width: `${Math.min(
-                    100,
-                    (dailyTotals.calories / DAILY_GOALS.calories) * 100
-                  )}%`,
-                },
-              ]}
-            />
-          </View>
-        </View>
+        <MacroNutrientSummary
+          carbs={demoMacros.carbs}
+          protein={demoMacros.protein}
+          fat={demoMacros.fat}
+        />
 
-        <View style={styles.macroContainer}>
-          <MacroProgressBar
-            label="Carboidratos"
-            current={dailyTotals.carbs}
-            target={DAILY_GOALS.carbs}
-            color="#4CAF50"
-          />
-          <MacroProgressBar
-            label="Proteínas"
-            current={dailyTotals.protein}
-            target={DAILY_GOALS.protein}
-            color="#2196F3"
-          />
-          <MacroProgressBar
-            label="Gorduras"
-            current={dailyTotals.fat}
-            target={DAILY_GOALS.fat}
-            color="#FF9800"
-          />
-        </View>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
         {(Object.keys(meals) as MealType[]).map((mealType) => (
           <MealSection
             key={mealType}
@@ -340,68 +261,6 @@ const MealDiaryScreen: React.FC<MealDiaryScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  dateSelector: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginBottom: 16,
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  summaryCard: {
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-  },
-  summaryTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 12,
-  },
-  calorieProgress: {
-    marginBottom: 16,
-  },
-  calorieHeader: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginBottom: 8,
-  },
-  calorieValue: {
-    fontSize: 24,
-    fontWeight: "700",
-  },
-  calorieLabel: {
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  progressBar: {
-    height: 10,
-    borderRadius: 5,
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 5,
-  },
-  macroContainer: {
-    marginTop: 8,
   },
   content: {
     padding: 20,

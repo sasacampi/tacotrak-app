@@ -80,7 +80,6 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({
     setMeals((prevMeals) => {
       const updatedFoods = [...prevMeals[mealType].foods, food];
 
-      // Recalcular totais da refeição
       const mealTotals = updatedFoods.reduce(
         (total, item) => {
           return {
@@ -113,7 +112,6 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({
         (food) => food.id !== foodId
       );
 
-      // Recalcular totais da refeição
       const mealTotals = updatedFoods.reduce(
         (total, item) => {
           return {

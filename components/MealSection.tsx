@@ -39,6 +39,39 @@ const MealSection: React.FC<MealSectionProps> = ({
 }) => {
   const { colors } = useTheme();
 
+  // Get meal icon based on title
+  const getMealIcon = () => {
+    switch (title) {
+      case "Café da Manhã":
+        return "coffee";
+      case "Almoço":
+        return "sun";
+      case "Jantar":
+        return "moon";
+      case "Lanches":
+        return "pie-chart";
+      default:
+        return "circle";
+    }
+  };
+
+  const getMealColor = () => {
+    switch (title) {
+      case "Café da Manhã":
+        return "#007AFF";
+      case "Almoço":
+        return "#007AFF";
+      case "Jantar":
+        return "#007AFF";
+      case "Lanches":
+        return "#007AFF";
+      default:
+        return colors.primary;
+    }
+  };
+
+  const mealColor = getMealColor();
+
   return (
     <View
       style={[
@@ -47,13 +80,20 @@ const MealSection: React.FC<MealSectionProps> = ({
       ]}
     >
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        <View style={styles.titleContainer}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: mealColor + "20" },
+            ]}
+          >
+            <Feather name={getMealIcon()} size={16} color={mealColor} />
+          </View>
+          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        </View>
         <View style={styles.macroSummary}>
-          <Text style={[styles.calories, { color: colors.primary }]}>
+          <Text style={[styles.calories, { color: mealColor }]}>
             {totalCalories} kcal
-          </Text>
-          <Text style={[styles.macros, { color: colors.gray }]}>
-            C: {totalCarbs}g | P: {totalProtein}g | G: {totalFat}g
           </Text>
         </View>
       </View>
@@ -75,19 +115,19 @@ const MealSection: React.FC<MealSectionProps> = ({
                 </Text>
               </View>
               <View style={styles.foodNutrition}>
-                <Text style={[styles.foodCalories, { color: colors.primary }]}>
+                <Text style={[styles.foodCalories, { color: mealColor }]}>
                   {food.calories} kcal
                 </Text>
                 <Text style={[styles.foodMacros, { color: colors.gray }]}>
                   C: {food.carbs}g | P: {food.protein}g | G: {food.fat}g
                 </Text>
               </View>
-              <Feather
-                name="trash-2"
-                size={18}
-                color={colors.gray}
-                style={styles.deleteIcon}
-              />
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => onFoodPress(food)}
+              >
+                <Feather name="trash-2" size={18} color={colors.gray} />
+              </TouchableOpacity>
             </TouchableOpacity>
           ))
         ) : (
@@ -100,11 +140,14 @@ const MealSection: React.FC<MealSectionProps> = ({
       </View>
 
       <TouchableOpacity
-        style={[styles.addButton, { borderColor: colors.primary }]}
+        style={[
+          styles.addButton,
+          { backgroundColor: mealColor + "10", borderColor: mealColor + "30" },
+        ]}
         onPress={onAddFood}
       >
-        <Feather name="plus" size={18} color={colors.primary} />
-        <Text style={[styles.addButtonText, { color: colors.primary }]}>
+        <Feather name="plus" size={18} color={mealColor} />
+        <Text style={[styles.addButtonText, { color: mealColor }]}>
           Adicionar Alimento
         </Text>
       </TouchableOpacity>
@@ -127,9 +170,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#EEEEEE",
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
   macroSummary: {
     alignItems: "flex-end",
@@ -137,10 +193,12 @@ const styles = StyleSheet.create({
   calories: {
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
   macros: {
     fontSize: 12,
     marginTop: 2,
+    fontFamily: "Poppins-Regular",
   },
   foodList: {
     paddingHorizontal: 16,
@@ -156,12 +214,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   foodName: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
+    fontFamily: "Poppins-Medium",
   },
   foodPortion: {
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 2,
+    fontFamily: "Poppins-Regular",
   },
   foodNutrition: {
     alignItems: "flex-end",
@@ -170,12 +230,14 @@ const styles = StyleSheet.create({
   foodCalories: {
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "Poppins-Medium",
   },
   foodMacros: {
-    fontSize: 12,
+    fontSize: 10,
+    fontFamily: "Poppins-Regular",
   },
-  deleteIcon: {
-    padding: 4,
+  deleteButton: {
+    padding: 8,
   },
   emptyState: {
     paddingVertical: 20,
@@ -183,20 +245,21 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
+    fontFamily: "Poppins-Regular",
   },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     borderTopWidth: 1,
-    borderTopColor: "#EEEEEE",
     padding: 12,
     marginTop: 8,
   },
   addButtonText: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
+    fontFamily: "Poppins-Medium",
   },
 });
 
