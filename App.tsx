@@ -54,7 +54,7 @@ function MainTabs() {
 
             return <Feather name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "#007AFF",
+          tabBarActiveTintColor: "#e950a3",
           tabBarInactiveTintColor: "#9E9E9E",
           tabBarStyle: {
             paddingBottom: 5,
@@ -92,7 +92,7 @@ function MainTabs() {
                   width: 56,
                   height: 56,
                   borderRadius: 28,
-                  backgroundColor: "#007AFF",
+                  backgroundColor: "#e950a3",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: 28,

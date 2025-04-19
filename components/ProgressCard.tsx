@@ -26,7 +26,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <View style={[styles.container, { backgroundColor: "#007AFF" }]}>
+    <View style={[styles.container, { backgroundColor: "#e950a3" }]}>
       <View style={styles.contentContainer}>
         <View style={styles.leftContent}>
           <View style={styles.progressLabelContainer}>

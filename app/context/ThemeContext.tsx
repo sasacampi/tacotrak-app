@@ -25,14 +25,15 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  // Fixed light theme colors
   const colors = {
-    background: "#FFFFFF",
+    background: "#F8F8F8",
     card: "#FFFFFF",
     text: "#333333",
     border: "#F0F0F0",
-    primary: "#007AFF",
-    secondary: "#64DFDF",
-    accent: "#72EFDD",
+    primary: "#e950a3", // Rosa
+    secondary: "#64DFDF", // Teal
+    accent: "#72EFDD", // Mint
     success: "#4CAF50",
     warning: "#FFC107",
     danger: "#F44336",
