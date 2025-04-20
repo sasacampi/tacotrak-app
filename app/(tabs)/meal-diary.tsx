@@ -298,40 +298,46 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
     const meal = dayData.meals.find((m) => m.type === mealType);
     const mealTotals = getMealTotals(mealType);
     const mealTitle = getMealTitle(mealType);
-    const mealIcon = getMealIcon(mealType);
 
     if (!meal) return null;
 
     return (
-      <View style={[styles.mealSection, { backgroundColor: "#FFFFFF" }]}>
+      <View
+        style={[
+          styles.mealSection,
+          { backgroundColor: "#FFFFFF", borderColor: "#ebedf8" },
+        ]}
+      >
         <TouchableOpacity
           style={styles.mealHeader}
           onPress={() => toggleMealCollapse(mealType)}
+          activeOpacity={0.7}
         >
           <View style={styles.mealHeaderLeft}>
-            <Feather
-              name={mealIcon}
-              size={16}
-              color="#e950a3"
-              style={styles.mealIcon}
-            />
-            <Text style={[styles.mealTitle, { color: "#333" }]}>
-              {mealTitle}
+            <Text style={[styles.mealTitle, { color: "#3A3E4F" }]}>
+              {mealTitle.toUpperCase()}
+            </Text>
+            <Text style={styles.mealCalories}>
+              <Text style={{ fontWeight: "600" }}>{mealTotals.calories}</Text>
+              <Text style={{ color: "#9fa0bc" }}> kcal</Text>
             </Text>
           </View>
-          <View style={styles.mealHeaderRight}>
-            <View style={styles.mealTotals}>
-              <Text style={[styles.mealCalories, { color: "#333" }]}>
-                {mealTotals.calories}{" "}
-                <Text style={styles.mealCaloriesUnit}>kcal</Text>
-              </Text>
-            </View>
+          <View style={styles.headerRightContainer}>
             <TouchableOpacity
-              style={[styles.addButton, { backgroundColor: "#FF8A65" }]}
-              onPress={() => handleAddFood(mealType)}
+              style={[styles.addButton, { backgroundColor: "#F0F1F5" }]}
+              onPress={(e) => {
+                e.stopPropagation();
+                handleAddFood(mealType);
+              }}
             >
-              <Feather name="plus" size={16} color="#FFFFFF" />
+              <Feather name="plus" size={18} color="#3A3E4F" />
             </TouchableOpacity>
+            <Feather
+              name={meal.isCollapsed ? "chevron-down" : "chevron-up"}
+              size={20}
+              color="#3A3E4F"
+              style={styles.collapseIcon}
+            />
           </View>
         </TouchableOpacity>
 
@@ -341,34 +347,24 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
               meal.foods.map((food) => (
                 <View key={food.id} style={styles.foodItem}>
                   <View style={styles.foodItemLeft}>
-                    <View style={styles.foodImageContainer}>
-                      <View
-                        style={[
-                          styles.foodColorIndicator,
-                          { backgroundColor: "#FF8A65" },
-                        ]}
-                      />
-                    </View>
                     <View style={styles.foodInfo}>
-                      <Text style={[styles.foodName, { color: "#333" }]}>
-                        {food.nome}
-                      </Text>
-                      <Text style={[styles.foodCalories, { color: "#666" }]}>
-                        {food.calorias} kcal
+                      <Text style={styles.foodName}>{food.nome}</Text>
+                      <Text style={styles.foodCalories}>
+                        {food.calorias} cals
                       </Text>
                     </View>
                   </View>
                   <TouchableOpacity
-                    style={styles.removeButton}
+                    style={[styles.itemButton, { backgroundColor: "#F0F1F5" }]}
                     onPress={() => handleRemoveFood(mealType, food.id)}
                   >
-                    <Feather name="x-circle" size={20} color="#ccc" />
+                    <Feather name="trash-2" size={14} color="#3A3E4F" />
                   </TouchableOpacity>
                 </View>
               ))
             ) : (
               <View style={styles.emptyMeal}>
-                <Text style={[styles.emptyText, { color: "#999" }]}>
+                <Text style={[styles.emptyText, { color: "#9fa0bc" }]}>
                   Nenhum alimento adicionado
                 </Text>
               </View>
@@ -399,7 +395,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
             <TouchableOpacity
               style={[
                 styles.dateItem,
-                isDateSelected(item) && { backgroundColor: "#FF8A65" },
+                isDateSelected(item) && { backgroundColor: "#3A3E4F" },
               ]}
               onPress={() => handleDateSelect(item)}
             >
@@ -511,7 +507,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                           100,
                           (dailyTotals.carbs / dailyGoals.carbs) * 100
                         )}%`,
-                        backgroundColor: "#FF8A65",
+                        backgroundColor: "#3A3E4F",
                       },
                     ]}
                   />
@@ -612,7 +608,12 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                   style={styles.searchResultItem}
                   onPress={() => handleSelectFood(item)}
                 >
-                  <View style={styles.searchResultColorIndicator} />
+                  <View
+                    style={[
+                      styles.searchResultColorIndicator,
+                      { backgroundColor: "#3A3E4F" },
+                    ]}
+                  />
                   <View style={styles.searchResultInfo}>
                     <Text style={styles.searchResultName}>{item.nome}</Text>
                     <Text style={styles.searchResultCalories}>
@@ -717,15 +718,26 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                       <View
                         style={[
                           styles.macroCircleInner,
-                          { borderColor: "#FF8A65" },
+                          { borderColor: "#3A3E4F" },
                         ]}
                       >
-                        <Text style={styles.macroCirclePercent}>70%</Text>
+                        {selectedFood && (
+                          <Text style={styles.macroCirclePercent}>
+                            {Math.round(
+                              (selectedFood.carboidratos /
+                                (selectedFood.carboidratos +
+                                  selectedFood.proteinas +
+                                  2)) *
+                                100
+                            )}
+                            %
+                          </Text>
+                        )}
                       </View>
                       <Text style={styles.macroCircleLabel}>Carboidratos</Text>
                       <Text style={styles.macroCircleValue}>
                         {(
-                          selectedFood.carboidratos *
+                          selectedFood?.carboidratos *
                           (servingSize / 100)
                         ).toFixed(1)}
                         g
@@ -739,13 +751,25 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                           { borderColor: "#e950a3" },
                         ]}
                       >
-                        <Text style={styles.macroCirclePercent}>13%</Text>
+                        {selectedFood && (
+                          <Text style={styles.macroCirclePercent}>
+                            {Math.round(
+                              (selectedFood.proteinas /
+                                (selectedFood.carboidratos +
+                                  selectedFood.proteinas +
+                                  2)) *
+                                100
+                            )}
+                            %
+                          </Text>
+                        )}
                       </View>
                       <Text style={styles.macroCircleLabel}>Proteínas</Text>
                       <Text style={styles.macroCircleValue}>
-                        {(selectedFood.proteinas * (servingSize / 100)).toFixed(
-                          1
-                        )}
+                        {(
+                          selectedFood?.proteinas *
+                          (servingSize / 100)
+                        ).toFixed(1)}
                         g
                       </Text>
                     </View>
@@ -757,10 +781,26 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                           { borderColor: "#4CAF50" },
                         ]}
                       >
-                        <Text style={styles.macroCirclePercent}>9%</Text>
+                        {selectedFood && (
+                          <Text style={styles.macroCirclePercent}>
+                            {Math.round(
+                              (2 /
+                                (selectedFood.carboidratos +
+                                  selectedFood.proteinas +
+                                  2)) *
+                                100
+                            )}
+                            %
+                          </Text>
+                        )}
                       </View>
                       <Text style={styles.macroCircleLabel}>Gorduras</Text>
-                      <Text style={styles.macroCircleValue}>0g</Text>
+                      <Text style={styles.macroCircleValue}>
+                        {((selectedFood ? 2 : 0) * (servingSize / 100)).toFixed(
+                          1
+                        )}
+                        g
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -768,7 +808,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                 <TouchableOpacity
                   style={[
                     styles.addToJournalButton,
-                    { backgroundColor: "#e950a3" },
+                    { backgroundColor: "#3A3E4F" },
                   ]}
                   onPress={handleAddToJournal}
                 >
@@ -815,7 +855,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
             <TouchableOpacity
               style={[
                 styles.saveCalorieGoalButton,
-                { backgroundColor: "#e950a3" },
+                { backgroundColor: "#3A3E4F" },
               ]}
               onPress={handleSaveCalorieGoal}
             >
@@ -907,114 +947,93 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   mealSection: {
-    borderRadius: 20,
+    borderRadius: 16,
     marginBottom: 15,
     overflow: "hidden",
+    backgroundColor: "#f8f9fe",
+    borderWidth: 1,
+    borderColor: "#ebedf8",
+    padding: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
-    shadowRadius: 5,
+    shadowRadius: 4,
     elevation: 2,
   },
   mealHeader: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    padding: 15,
+    alignItems: "flex-start",
+    marginBottom: 16,
   },
   mealHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  mealIcon: {
-    marginRight: 8,
-  },
-  mealHeaderRight: {
-    flexDirection: "row",
-    alignItems: "center",
+    flex: 1,
   },
   mealTitle: {
     fontSize: 14,
     fontWeight: "600",
+    marginBottom: 4,
     fontFamily: "Poppins-SemiBold",
-  },
-  mealTotals: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 10,
+    letterSpacing: 0.5,
+    color: "#6b6edc",
   },
   mealCalories: {
     fontSize: 14,
-    fontWeight: "600",
-    marginLeft: 5,
-    fontFamily: "Poppins-SemiBold",
-  },
-  mealCaloriesUnit: {
-    fontSize: 12,
-    fontWeight: "normal",
-    color: "#666",
+    fontFamily: "Poppins-Regular",
+    color: "#333",
   },
   addButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: "center",
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: "center",
-  },
-  mealContent: {
-    padding: 15,
-    paddingTop: 0,
+    alignItems: "center",
+    backgroundColor: "#e9eaff",
   },
   foodItem: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
+    borderBottomColor: "#ebedf8",
   },
   foodItemLeft: {
-    flexDirection: "row",
-    alignItems: "center",
     flex: 1,
-  },
-  foodImageContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: "#F6F6F6",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 15,
-  },
-  foodColorIndicator: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
   },
   foodInfo: {
     flex: 1,
   },
   foodName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "500",
-    marginBottom: 5,
+    color: "#333",
+    marginBottom: 4,
     fontFamily: "Poppins-Medium",
   },
   foodCalories: {
-    fontSize: 14,
+    fontSize: 13,
+    color: "#9fa0bc",
     fontFamily: "Poppins-Regular",
   },
-  removeButton: {
-    padding: 5,
+  itemButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
+    backgroundColor: "#e9eaff",
   },
   emptyMeal: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   emptyText: {
     fontSize: 14,
+    color: "#9fa0bc",
     fontFamily: "Poppins-Regular",
+    textAlign: "center",
   },
   nutritionSummaryToggle: {
     alignItems: "center",
@@ -1341,6 +1360,16 @@ const styles = StyleSheet.create({
     color: "#333",
     marginRight: 10,
     fontFamily: "Poppins-Medium",
+  },
+  mealContent: {
+    marginTop: 8,
+  },
+  headerRightContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  collapseIcon: {
+    marginLeft: 12,
   },
 });
 
