@@ -75,15 +75,20 @@ const MacroNutrientSummary: React.FC<MacroNutrientSummaryProps> = ({
       ]}
     >
       <View style={styles.macrosContainer}>
-        {renderMacroItem("Carbs", carbs.current, carbs.target, "#70B01B")}
         {renderMacroItem(
-          "Protein",
+          "Carboidratos",
+          carbs.current,
+          carbs.target,
+          "#70B01B"
+        )}
+        {renderMacroItem(
+          "Proteína",
           protein.current,
           protein.target,
           "#FFA726",
           true
         )}
-        {renderMacroItem("Fat", fat.current, fat.target, "#C8B6E2")}
+        {renderMacroItem("Gordura", fat.current, fat.target, "#C8B6E2")}
       </View>
     </View>
   );

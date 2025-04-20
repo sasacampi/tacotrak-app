@@ -6,41 +6,31 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import type { TabScreenProps } from "../../types/navigation";
-import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
-import ProgressGoalCard from "../../components/ProgressGoalCard";
-
-const weeklyData = [
-  { day: "Mon", calories: 1800, protein: 90, fat: 60 },
-  { day: "Tue", calories: 2100, protein: 110, fat: 70 },
-  { day: "Wed", calories: 2300, protein: 120, fat: 75 },
-  { day: "Thu", calories: 1900, protein: 95, fat: 65 },
-  { day: "Fri", calories: 2000, protein: 100, fat: 68 },
-  { day: "Sat", calories: 2200, protein: 115, fat: 72 },
-  { day: "Sun", calories: 2100, protein: 105, fat: 70 },
-];
+import Svg, {
+  Circle,
+  Defs,
+  LinearGradient,
+  Stop,
+  Path,
+} from "react-native-svg";
+import WeightProgressGraph from "../../components/WeightProgressGraph";
 
 const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
   const { colors } = useTheme();
-  const [selectedPeriod, setSelectedPeriod] = useState("Semanal");
-
-  const meals = {
-    breakfast: { totalCalories: 450 },
-    lunch: { totalCalories: 750 },
-    dinner: { totalCalories: 650 },
-    snacks: { totalCalories: 350 },
-  };
-  const totalCalories = 2200;
+  const [reminderModalVisible, setReminderModalVisible] = useState(false);
 
   const nutritionData = {
     calories: {
-      current: 1650,
+      current: 500,
       target: 2000,
-      color: "#4361EE",
+      color: "#8676FF",
     },
     carbs: {
       current: 120,
@@ -60,24 +50,30 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
   };
 
   const userData = {
-    currentWeight: 60.0,
+    name: "Michele",
+    healthScore: 84,
+    currentWeight: 58.0,
     weightChange: -0.45,
     percentageChange: 56,
     goalWeight: 52.0,
     heartRate: 97,
-    water: 1200,
-    steps: 11932,
+    water: 750,
+    steps: 9890,
     sleep: "7h 23m",
+    lastUpdated: {
+      calories: "5m",
+      weight: "2d",
+      water: "2h",
+      steps: "5m",
+    },
   };
-
-  const maxCalories = Math.max(...weeklyData.map((day) => day.calories));
 
   const createCircularProgress = (
     size: number,
     strokeWidth: number,
     progress: number,
     color: string,
-    bgColor = "rgba(240, 240, 240, 0.3)",
+    bgColor = "rgba(255, 255, 255, 0.3)",
     useGradient = false
   ) => {
     const radius = (size - strokeWidth) / 2;
@@ -118,453 +114,307 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
     );
   };
 
-  return (
-    <SafeAreaView style={[styles.container, { backgroundColor: "#F8F8F8" }]}>
-      {/* Header with gradient background */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
-          Dashboard
-        </Text>
-        <TouchableOpacity>
-          <Feather name="more-vertical" size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
+  const recipeIdeas = [
+    {
+      image:
+        "https://media.istockphoto.com/id/1194626748/pt/foto/roast-chicken-legs-with-fried-potatoes-and-vegetables.jpg?s=612x612&w=0&k=20&c=wKcze6D28rCVRgN4GVAKThfZ6himZxLqBxktDgsVbXQ=",
+      kitchen: "Cozinha Saudável",
+      title: "Frango assado ao molho",
+      rating: 4.9,
+      time: "20-25 min",
+      words: "980 palavras",
+    },
+    {
+      image:
+        "https://media.istockphoto.com/id/1180275119/pt/foto/homemade-mexican-baja-rice-bowl.jpg?s=612x612&w=0&k=20&c=d9XnW9kU5ZXYMaGQ9Rwalgx_5cRagU3Y7wi0hijw2Og=",
+      kitchen: "Cozinha Fit",
+      title: "Salada de quinoa com legumes",
+      rating: 4.7,
+      time: "15 min",
+      words: "750 palavras",
+    },
+    {
+      image:
+        "https://masterkitchen.com.br/wp-content/uploads/2022/02/Omelete-de-forno-com-espinafre-e-queijo-otimo-para-servir-como-brunch.jpg",
+      kitchen: "Cozinha Rápida",
+      title: "Omelete de espinafre e queijo",
+      rating: 4.8,
+      time: "10 min",
+      words: "620 palavras",
+    },
+  ];
 
+  const showWaterReminder = () => {
+    setReminderModalVisible(true);
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: "#F6F6F6" }]}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        {/* Summary section */}
-        <View style={styles.summarySection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Today's Summary
-          </Text>
+        <View style={styles.header}>
+          <View style={styles.greetingContainer}>
+            <Text style={styles.helloText}>Olá,</Text>
+            <Text style={styles.usernameText}>{userData.name}</Text>
+          </View>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={showWaterReminder}
+            >
+              <Feather name="bell" size={22} color="#333" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Feather name="user" size={22} color="#333" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
-          {/* Nutrition Widget with shadow and improved styling */}
-          <View
-            style={[
-              styles.nutritionWidget,
-              {
-                backgroundColor: "#FFFFFF",
-                borderColor: "transparent",
-              },
-            ]}
-          >
-            <View style={styles.caloriesContainer}>
-              <View style={styles.caloriesRing}>
-                {createCircularProgress(
-                  120,
-                  12,
-                  nutritionData.calories.current /
-                    nutritionData.calories.target,
-                  colors.primary,
-                  "rgba(240, 240, 240, 0.3)",
-                  true
-                )}
-                <View style={styles.caloriesContent}>
-                  <Feather name="zap" size={16} color={colors.primary} />
-                  <Text
-                    style={[styles.caloriesValue, { color: colors.primary }]}
-                  >
-                    {nutritionData.calories.current}
-                  </Text>
-                  <Text style={[styles.caloriesTarget, { color: colors.gray }]}>
-                    /{nutritionData.calories.target} kcal
-                  </Text>
-                </View>
-              </View>
+        <View style={[styles.activityCard, { backgroundColor: "#e950a3" }]}>
+          <View style={styles.activityHeader}>
+            <View style={styles.activityTitleContainer}>
+              <Feather
+                name="activity"
+                size={20}
+                color="#FFFFFF"
+                style={styles.activityIcon}
+              />
+              <Text style={styles.activityTitle}>Atividade</Text>
             </View>
+            <TouchableOpacity style={styles.viewAllButton}>
+              <Text style={styles.viewAllText}>Ver tudo</Text>
+              <Feather name="chevron-right" size={16} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.macrosContainer}>
+          <View style={styles.caloriesContainer}>
+            <View>
+              <Text style={styles.caloriesLabel}>Calorias</Text>
+              <Text style={styles.caloriesValue}>2350 Cal</Text>
+            </View>
+            <View style={styles.progressCircleContainer}>
+              {createCircularProgress(
+                50,
+                6,
+                0.59,
+                "#FFFFFF",
+                "rgba(255, 255, 255, 0.3)"
+              )}
+            </View>
+          </View>
+
+          <View style={styles.macroDetailsCard}>
+            <View style={styles.macroRow}>
               <View style={styles.macroItem}>
-                <View style={styles.macroRing}>
-                  {createCircularProgress(
-                    50,
-                    6,
-                    nutritionData.carbs.current / nutritionData.carbs.target,
-                    nutritionData.carbs.color
-                  )}
-                  <Text style={[styles.macroValue, { color: colors.text }]}>
-                    {nutritionData.carbs.current}g
-                  </Text>
-                </View>
-                <Text style={[styles.macroLabel, { color: colors.gray }]}>
-                  Carbs
-                </Text>
+                <Text style={styles.macroValue}>120g</Text>
+                <Text style={styles.macroLabel}>Proteína</Text>
+                <View
+                  style={[
+                    styles.macroIndicator,
+                    { backgroundColor: "#3B82F6" },
+                  ]}
+                />
               </View>
 
               <View style={styles.macroItem}>
-                <View style={styles.macroRing}>
-                  {createCircularProgress(
-                    50,
-                    6,
-                    nutritionData.protein.current /
-                      nutritionData.protein.target,
-                    nutritionData.protein.color
-                  )}
-                  <Text style={[styles.macroValue, { color: colors.text }]}>
-                    {nutritionData.protein.current}g
-                  </Text>
-                </View>
-                <Text style={[styles.macroLabel, { color: colors.gray }]}>
-                  Proteína
-                </Text>
+                <Text style={styles.macroValue}>50g</Text>
+                <Text style={styles.macroLabel}>Carboidratos</Text>
+                <View
+                  style={[
+                    styles.macroIndicator,
+                    { backgroundColor: "#EF4444" },
+                  ]}
+                />
               </View>
 
               <View style={styles.macroItem}>
-                <View style={styles.macroRing}>
-                  {createCircularProgress(
-                    50,
-                    6,
-                    nutritionData.fat.current / nutritionData.fat.target,
-                    nutritionData.fat.color
-                  )}
-                  <Text style={[styles.macroValue, { color: colors.text }]}>
-                    {nutritionData.fat.current}g
-                  </Text>
-                </View>
-                <Text style={[styles.macroLabel, { color: colors.gray }]}>
-                  Gordura
-                </Text>
+                <Text style={styles.macroValue}>8g</Text>
+                <Text style={styles.macroLabel}>Gorduras</Text>
+                <View
+                  style={[
+                    styles.macroIndicator,
+                    { backgroundColor: "#F59E0B" },
+                  ]}
+                />
               </View>
             </View>
           </View>
         </View>
 
-        {/* Goals section */}
-        <View style={styles.goalsSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Weight Goals
-          </Text>
+        <View style={styles.metricsHeader}>
+          <Text style={styles.metricsTitle}>Métricas</Text>
+          <TouchableOpacity>
+            <Feather name="more-horizontal" size={24} color="#333" />
+          </TouchableOpacity>
+        </View>
 
-          <View
-            style={[
-              styles.card,
-              {
-                backgroundColor: "#FFFFFF",
-                borderColor: "transparent",
-                padding: 16,
-              },
-            ]}
-          >
-            <View style={styles.weightGridContainer}>
-              <View style={styles.weightGridItem}>
-                <Text style={[styles.weightGridLabel, { color: "#FF9800" }]}>
-                  Weight Loss
+        <View style={styles.metricsGrid}>
+          <View style={[styles.metricCard, { backgroundColor: "#e950a3" }]}>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>CALORIAS</Text>
+              <View style={styles.metricValueContainer}>
+                <Text style={styles.metricValue}>
+                  {nutritionData.calories.current}
                 </Text>
-                <Text style={[styles.weightGridValue, { color: colors.text }]}>
-                  {userData.currentWeight} kg
+                <Text style={styles.metricUnit}>cal</Text>
+              </View>
+              <Text style={styles.metricUpdate}>
+                última atualização {userData.lastUpdated.calories}
+              </Text>
+            </View>
+            <View style={styles.metricGraphContainer}>
+              {createCircularProgress(
+                60,
+                8,
+                nutritionData.calories.current / nutritionData.calories.target,
+                "#FFFFFF",
+                "rgba(255, 255, 255, 0.3)"
+              )}
+            </View>
+          </View>
+
+          <View style={[styles.metricCard, { backgroundColor: "#FF8A65" }]}>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>PESO</Text>
+              <View style={styles.metricValueContainer}>
+                <Text style={styles.metricValue}>{userData.currentWeight}</Text>
+                <Text style={styles.metricUnit}>kg</Text>
+              </View>
+              <Text style={styles.metricUpdate}>
+                última atualização {userData.lastUpdated.weight}
+              </Text>
+            </View>
+            <View style={styles.metricGraphContainer}>
+              <Svg height="40" width="60" viewBox="0 0 60 40">
+                <Path
+                  d="M0,20 C10,10 20,30 30,15 C40,5 50,25 60,20"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              </Svg>
+            </View>
+          </View>
+
+          {/* Water Card */}
+          <View style={[styles.metricCard, { backgroundColor: "#FF5252" }]}>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>ÁGUA</Text>
+              <View style={styles.metricValueContainer}>
+                <Text style={styles.metricValue}>{userData.water}</Text>
+                <Text style={styles.metricUnit}>ml</Text>
+              </View>
+              <Text style={styles.metricUpdate}>
+                última atualização {userData.lastUpdated.water}
+              </Text>
+            </View>
+            <View style={styles.metricGraphContainer}>
+              <Feather name="droplet" size={30} color="#FFFFFF" />
+            </View>
+          </View>
+
+          <View style={[styles.metricCard, { backgroundColor: "#3A3E4F" }]}>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>PASSOS</Text>
+              <View style={styles.metricValueContainer}>
+                <Text style={styles.metricValue}>
+                  {userData.steps.toLocaleString()}
                 </Text>
               </View>
-
-              <View style={styles.weightGridItem}>
-                <Text style={[styles.weightGridLabel, { color: "#e950a3" }]}>
-                  Current Wt
-                </Text>
-                <Text style={[styles.weightGridValue, { color: colors.text }]}>
-                  {userData.currentWeight + 7} kg
-                </Text>
-              </View>
-
-              <View style={styles.weightGridItem}>
-                <Text style={[styles.weightGridLabel, { color: "#2196F3" }]}>
-                  Avg Wt
-                </Text>
-                <Text style={[styles.weightGridValue, { color: colors.text }]}>
-                  {userData.currentWeight - 3.7} kg
-                </Text>
-              </View>
-
-              <View style={styles.weightGridItem}>
-                <Text style={[styles.weightGridLabel, { color: "#FFC107" }]}>
-                  Wt Track
-                </Text>
-                <Text style={[styles.weightGridValue, { color: colors.text }]}>
-                  {userData.goalWeight + 10.9} kg
-                </Text>
-              </View>
+              <Text style={styles.metricUpdate}>
+                última atualização {userData.lastUpdated.steps}
+              </Text>
+            </View>
+            <View style={styles.metricGraphContainer}>
+              <Feather name="activity" size={30} color="#FFFFFF" />
             </View>
           </View>
         </View>
 
-        {/* Calories section */}
-        <View style={styles.caloriesSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Calories Tracking
-          </Text>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Progresso de Peso</Text>
+          <WeightProgressGraph />
+        </View>
 
-          <View
-            style={[
-              styles.card,
-              {
-                backgroundColor: colors.card,
-                borderColor: "transparent",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0,
-                shadowRadius: 0,
-                elevation: 0,
-                padding: 20,
-              },
-            ]}
-          >
-            <View style={{ position: "relative", width: "100%" }}>
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  top: -10,
-                  right: -10,
-                  padding: 10,
-                }}
-              >
-                <Feather name="more-horizontal" size={20} color={colors.gray} />
-              </TouchableOpacity>
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionTitleRow}>
+            <Text style={styles.sectionTitle}>Ideias de Receitas</Text>
+            <TouchableOpacity>
+              <Text style={styles.viewMoreText}>Ver mais &gt;</Text>
+            </TouchableOpacity>
+          </View>
 
-              <View style={styles.cardHeader}>
-                <View style={styles.caloriesHeaderContent}>
-                  <Text
-                    style={[
-                      styles.cardTitle,
-                      {
-                        color: colors.text,
-                        fontWeight: "bold",
-                        fontSize: 18,
-                        padding: 0,
-                      },
-                    ]}
-                  >
-                    Calorias
-                  </Text>
-                  <Text
-                    style={[
-                      styles.cardTitle,
-                      {
-                        color: colors.text,
-                        fontSize: 24,
-                        marginTop: 4,
-                        padding: 0,
-                      },
-                    ]}
-                  >
-                    11930
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      width: "100%",
-                    }}
-                  >
-                    <Text
-                      style={[
-                        styles.cardTitle,
-                        {
-                          color: "#B0B0B0",
-                          fontSize: 13,
-                          marginTop: 4,
-                          padding: 0,
-                        },
-                      ]}
-                    >
-                      Média diária: 1650
-                    </Text>
-                    <Text
-                      style={[
-                        styles.cardTitle,
-                        {
-                          color: "#B0B0B0",
-                          fontSize: 13,
-                          marginTop: 4,
-                          padding: 0,
-                        },
-                      ]}
-                    >
-                      Objetivo: 1650
-                    </Text>
+          {recipeIdeas.map((recipe, index) => (
+            <View key={index} style={styles.recipeCard}>
+              <View style={styles.recipeImageContainer}>
+                <Image
+                  source={{ uri: recipe.image }}
+                  style={styles.recipeImage}
+                />
+              </View>
+              <View style={styles.recipeContent}>
+                <Text style={styles.recipeKitchen}>{recipe.kitchen}</Text>
+                <Text style={styles.recipeTitle}>{recipe.title}</Text>
+                <View style={styles.recipeDetails}>
+                  <View style={styles.recipeRating}>
+                    <Feather name="star" size={14} color="#FF8A65" />
+                    <Text style={styles.recipeRatingText}>{recipe.rating}</Text>
                   </View>
+                  <View style={styles.recipeDot} />
+                  <Text style={styles.recipeTime}>{recipe.time}</Text>
+                  <View style={styles.recipeDot} />
+                  <Text style={styles.recipeWords}>{recipe.words}</Text>
                 </View>
               </View>
-            </View>
-
-            <View style={styles.legendContainer}>
-              <View style={styles.legendItem}>
-                <View
-                  style={[styles.legendColor, { backgroundColor: "#4CAF50" }]}
-                />
-                <Text style={[styles.legendText, { color: colors.gray }]}>
-                  Café da manhã
-                </Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View
-                  style={[styles.legendColor, { backgroundColor: "#FFA726" }]}
-                />
-                <Text style={[styles.legendText, { color: colors.gray }]}>
-                  Almoço
-                </Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View
-                  style={[styles.legendColor, { backgroundColor: "#BA68C8" }]}
-                />
-                <Text style={[styles.legendText, { color: colors.gray }]}>
-                  Jantar
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                style={[
-                  styles.periodSelector,
-                  { backgroundColor: colors.lightGray },
-                ]}
-              >
-                <Text style={[styles.smallPeriodText, { color: colors.gray }]}>
-                  {selectedPeriod}
-                </Text>
-                <Feather name="chevron-down" size={12} color={colors.gray} />
+              <TouchableOpacity style={styles.recipeAddButton}>
+                <Feather name="plus" size={24} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
-
-            <View style={styles.chartContainer}>
-              {weeklyData.map((day, index) => (
-                <View key={index} style={styles.chartColumn}>
-                  <View style={styles.barContainer}>
-                    <View
-                      style={[
-                        styles.barSegment,
-                        {
-                          backgroundColor: "#BA68C8",
-                          height: (day.fat / maxCalories) * 250,
-                          borderRadius: 4,
-                        },
-                      ]}
-                    />
-                    <View
-                      style={[
-                        styles.barSegment,
-                        {
-                          backgroundColor: "#FFA726",
-                          height: (day.protein / maxCalories) * 850,
-                          borderRadius: 4,
-                        },
-                      ]}
-                    />
-                    <View
-                      style={[
-                        styles.barSegment,
-                        {
-                          backgroundColor: "#4CAF50",
-                          height: (day.calories / maxCalories) * 65,
-                          borderRadius: 4,
-                        },
-                      ]}
-                    />
-                  </View>
-                  <Text style={[styles.dayLabel, { color: colors.gray }]}>
-                    {day.day}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        </View>
-
-        {/* Metrics section */}
-        <View style={styles.metricsSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Health Metrics
-          </Text>
-
-          <View style={styles.metricsGrid}>
-            <View style={styles.metricGridItem}>
-              <ProgressGoalCard
-                icon={<Feather name="heart" size={20} color="#F44336" />}
-                iconBgColor="#F44336"
-                title="Frequência Cardíaca"
-                subtitle={`${userData.heartRate} bpm`}
-                onPress={() => {}}
-                style={styles.metricCard}
-              />
-            </View>
-
-            <View style={styles.metricGridItem}>
-              <ProgressGoalCard
-                icon={<Feather name="droplet" size={20} color="#2196F3" />}
-                iconBgColor="#2196F3"
-                title="Água"
-                subtitle={`${userData.water} ml`}
-                onPress={() => {}}
-                style={styles.metricCard}
-              />
-            </View>
-          </View>
-
-          <View style={styles.metricsGrid}>
-            <View style={styles.metricGridItem}>
-              <ProgressGoalCard
-                icon={<Feather name="activity" size={20} color="#4CAF50" />}
-                iconBgColor="#4CAF50"
-                title="Passos"
-                subtitle={`${userData.steps} passos`}
-                onPress={() => {}}
-                style={styles.metricCard}
-              />
-            </View>
-
-            <View style={styles.metricGridItem}>
-              <ProgressGoalCard
-                icon={<Feather name="moon" size={20} color="#9C27B0" />}
-                iconBgColor="#9C27B0"
-                title="Sono"
-                subtitle={userData.sleep}
-                onPress={() => {}}
-                style={styles.metricCard}
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* Goals section */}
-        <View style={styles.goalsSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Fitness Goals
-          </Text>
-
-          <ProgressGoalCard
-            icon={<Feather name="award" size={20} color="#F5A623" />}
-            iconBgColor="#F5A623"
-            title="Gaining muscle"
-            subtitle="Muscle: 87.9%"
-            timeframe="Last week"
-            onPress={() => {}}
-            style={{
-              ...styles.enhancedCard,
-              backgroundColor: "#FFFFFF",
-              borderColor: "transparent",
-              marginBottom: 16,
-            }}
-          />
-
-          <ProgressGoalCard
-            icon={<Feather name="activity" size={20} color="#FF5252" />}
-            iconBgColor="#FF5252"
-            title="Weight loss"
-            subtitle="5.00 km"
-            timeframe="Last week"
-            onPress={() => {}}
-            style={{
-              ...styles.enhancedCard,
-              backgroundColor: "#FFFFFF",
-              borderColor: "transparent",
-              marginBottom: 16,
-            }}
-          />
+          ))}
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={reminderModalVisible}
+        onRequestClose={() => setReminderModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.reminderIconContainer}>
+              <Feather name="droplet" size={40} color="#FFFFFF" />
+            </View>
+            <Text style={styles.reminderTitle}>Lembrete de Água</Text>
+            <Text style={styles.reminderText}>
+              Já bebeu água hoje? Lembre-se de beber pelo menos 2 litros de água
+              por dia para manter-se hidratado.
+            </Text>
+            <View style={styles.reminderProgress}>
+              <View style={styles.reminderProgressBar}>
+                <View
+                  style={[
+                    styles.reminderProgressFill,
+                    { width: `${(userData.water / 2000) * 100}%` },
+                  ]}
+                />
+              </View>
+              <Text style={styles.reminderProgressText}>
+                {userData.water} / 2000 ml
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.reminderButton}
+              onPress={() => setReminderModalVisible(false)}
+            >
+              <Text style={styles.reminderButtonText}>Entendi</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -573,28 +423,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerGradient: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    fontFamily: "Poppins-SemiBold",
-  },
   scrollView: {
     flex: 1,
   },
@@ -602,248 +430,386 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 100,
   },
-  summarySection: {
-    marginBottom: 24,
-  },
-  goalsSection: {
-    marginBottom: 24,
-  },
-  caloriesSection: {
-    marginBottom: 24,
-  },
-  metricsSection: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    fontFamily: "Poppins-SemiBold",
-    marginBottom: 16,
-    marginLeft: 4,
-  },
-  // Nutrition Widget Styles
-  nutritionWidget: {
+  header: {
     flexDirection: "row",
-    padding: 20,
-    borderRadius: 16,
-    marginBottom: 8,
+    justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 24,
+  },
+  greetingContainer: {
+    flexDirection: "column",
+  },
+  helloText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#666",
+    fontFamily: "Poppins-Medium",
+  },
+  usernameText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
+    fontFamily: "Poppins-Bold",
+  },
+  headerIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
+  },
+  activityCard: {
+    backgroundColor: "#e950a3",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+  },
+  activityHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  activityTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  activityIcon: {
+    marginRight: 8,
+  },
+  activityTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    fontFamily: "Poppins-Bold",
+  },
+  viewAllButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  viewAllText: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    marginRight: 4,
+    fontFamily: "Poppins-Regular",
   },
   caloriesContainer: {
-    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 16,
   },
-  caloriesRing: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  caloriesContent: {
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
+  caloriesLabel: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    opacity: 0.8,
+    fontFamily: "Poppins-Regular",
   },
   caloriesValue: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "700",
+    color: "#FFFFFF",
     fontFamily: "Poppins-Bold",
   },
-  caloriesTarget: {
-    fontSize: 10,
-    fontFamily: "Poppins-Regular",
+  progressCircleContainer: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  macrosContainer: {
-    flex: 1,
-    flexDirection: "column",
+  progressCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  progressText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#e950a3",
+    fontFamily: "Poppins-Bold",
+  },
+  macroDetailsCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 16,
+  },
+  macroRow: {
+    flexDirection: "row",
     justifyContent: "space-between",
-    paddingLeft: 10,
   },
   macroItem: {
-    flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
-  },
-  macroRing: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
+    flex: 1,
   },
   macroValue: {
-    position: "absolute",
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#333333",
     fontFamily: "Poppins-Bold",
   },
   macroLabel: {
     fontSize: 12,
-    fontFamily: "Poppins-Medium",
+    color: "#666666",
+    marginTop: 2,
+    fontFamily: "Poppins-Regular",
   },
-  // Card styles
-  card: {
+  macroIndicator: {
+    height: 3,
+    width: "50%",
+    borderRadius: 2,
+    marginTop: 6,
+  },
+  metricsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  metricsTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
+    fontFamily: "Poppins-Bold",
+  },
+  metricsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
+  metricCard: {
+    width: "48%",
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-  },
-  cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
   },
-  cardTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  metricContent: {
+    flex: 1,
   },
-  cardTitle: {
-    fontSize: 16,
+  metricLabel: {
+    fontSize: 12,
     fontWeight: "600",
+    color: "rgba(255, 255, 255, 0.8)",
+    marginBottom: 8,
     fontFamily: "Poppins-SemiBold",
   },
-  moreButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  weightStats: {
+  metricValueContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "baseline",
   },
-  weightStat: {
-    alignItems: "center",
-    flex: 1,
-  },
-  weightStatDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  },
-  weightValue: {
-    fontSize: 18,
-    fontWeight: "bold",
+  metricValue: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "white",
     fontFamily: "Poppins-Bold",
-    marginBottom: 4,
   },
-  weightChange: {
-    fontSize: 18,
-    fontWeight: "bold",
-    fontFamily: "Poppins-Bold",
-    marginBottom: 4,
-  },
-  weightLabel: {
-    fontSize: 12,
+  metricUnit: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.8)",
+    marginLeft: 4,
     fontFamily: "Poppins-Regular",
   },
-  caloriesHeaderContent: {
-    flex: 1,
-  },
-  legendContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    flexWrap: "wrap",
-  },
-  legendItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 16,
-    marginBottom: 8,
-  },
-  legendColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 4,
-  },
-  legendText: {
-    fontSize: 12,
-    fontFamily: "Poppins-Regular",
-  },
-  periodSelector: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: "auto",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  smallPeriodText: {
-    fontSize: 11,
-    fontFamily: "Poppins-Regular",
-    marginRight: 4,
-  },
-  chartContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    height: 150,
-  },
-  chartColumn: {
-    alignItems: "center",
-    flex: 1,
-  },
-  barContainer: {
-    width: 24,
-    height: 120,
-    justifyContent: "flex-end",
-  },
-  barSegment: {
-    width: "100%",
-    marginBottom: 1,
-  },
-  dayLabel: {
-    fontSize: 12,
+  metricUpdate: {
+    fontSize: 10,
+    color: "rgba(255, 255, 255, 0.7)",
     marginTop: 8,
     fontFamily: "Poppins-Regular",
   },
-  // Metrics grid
-  metricsGrid: {
+  metricGraphContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sectionContainer: {
+    marginBottom: 24,
+  },
+  sectionTitleRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
-  metricGridItem: {
-    width: "48%",
-  },
-  metricCard: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
-    borderColor: "transparent",
-  },
-  enhancedCard: {
-    backgroundColor: "#f9f6ee",
-    borderColor: "transparent",
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
     marginBottom: 16,
-  },
-  weightGridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  weightGridItem: {
-    width: "48%",
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
-  },
-  weightGridLabel: {
-    fontSize: 14,
-    fontFamily: "Poppins-Medium",
-    marginBottom: 4,
-  },
-  weightGridValue: {
-    fontSize: 18,
-    fontWeight: "bold",
     fontFamily: "Poppins-Bold",
+  },
+  viewMoreText: {
+    fontSize: 12,
+    color: "#FF8A65",
+    fontFamily: "Poppins-Medium",
+  },
+  recipeCard: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    marginBottom: 16,
+    overflow: "hidden",
+    position: "relative",
+  },
+  recipeImageContainer: {
+    width: "100%",
+    height: 180,
+    position: "relative",
+  },
+  recipeImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  recipeOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  recipeOverlayText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
+  },
+  recipeContent: {
+    padding: 16,
+  },
+  recipeKitchen: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+    fontFamily: "Poppins-Regular",
+  },
+  recipeTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 8,
+    fontFamily: "Poppins-Bold",
+  },
+  recipeDetails: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  recipeRating: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  recipeRatingText: {
+    fontSize: 12,
+    color: "#666",
+    marginLeft: 4,
+    fontFamily: "Poppins-Medium",
+  },
+  recipeDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#CCC",
+    marginHorizontal: 8,
+  },
+  recipeTime: {
+    fontSize: 12,
+    color: "#666",
+    fontFamily: "Poppins-Regular",
+  },
+  recipeWords: {
+    fontSize: 12,
+    color: "#666",
+    fontFamily: "Poppins-Regular",
+  },
+  recipeAddButton: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#FF8A65",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+  },
+  reminderIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#FF5252",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  reminderTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 12,
+    fontFamily: "Poppins-Bold",
+  },
+  reminderText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+    fontFamily: "Poppins-Regular",
+  },
+  reminderProgress: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  reminderProgressBar: {
+    height: 10,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 5,
+    marginBottom: 8,
+    overflow: "hidden",
+  },
+  reminderProgressFill: {
+    height: "100%",
+    backgroundColor: "#FF5252",
+    borderRadius: 5,
+  },
+  reminderProgressText: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+    fontFamily: "Poppins-Regular",
+  },
+  reminderButton: {
+    backgroundColor: "#FF5252",
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderRadius: 25,
+  },
+  reminderButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
 });
 
