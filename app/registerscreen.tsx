@@ -17,7 +17,7 @@ import { useTheme } from "./context/ThemeContext";
 import Button from "../components/Button";
 import type { ScreenProps } from "../types/navigation";
 
-const RegisterScreen = ({ navigation }: ScreenProps) => {
+const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
   const { colors } = useTheme();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

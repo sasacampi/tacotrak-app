@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Animated, Easing, Image } from "react-native";
 import { useTheme } from "./context/ThemeContext";
 import type { ScreenProps } from "../types/navigation";
 
-const SplashScreen = ({ navigation }: ScreenProps) => {
+const SplashScreen = ({ navigation }: ScreenProps<"Splash">) => {
   const { colors } = useTheme();
   const scaleAnim = new Animated.Value(0.8);
   const opacityAnim = new Animated.Value(0);
@@ -46,7 +46,7 @@ const SplashScreen = ({ navigation }: ScreenProps) => {
       >
         <View style={styles.logoContainer}>
           <Image
-            source={require("../assets/images/logo.png")}
+            source={require("../assets/images/icon.png")}
             style={styles.logo}
             resizeMode="contain"
           />
