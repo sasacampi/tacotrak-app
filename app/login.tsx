@@ -43,7 +43,10 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
         password === mockCredentials.password
       ) {
         setIsLoading(false);
-        navigation.navigate("Onboarding");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainTabs", params: { screen: "Dashboard" } }],
+        });
       } else {
         setIsLoading(false);
         setError("A senha que você digitou está incorreta");
