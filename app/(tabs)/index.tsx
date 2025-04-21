@@ -6,8 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Modal,
-  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -21,10 +19,14 @@ import Svg, {
   Path,
 } from "react-native-svg";
 import WeightProgressGraph from "../../components/WeightProgressGraph";
+import NotificationModal from "../../components/NotificationModal";
 
 const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
   const { colors } = useTheme();
   const [reminderModalVisible, setReminderModalVisible] = useState(false);
+  const [notificationModalVisible, setNotificationModalVisible] =
+    useState(false);
+  const [hasNewNotifications] = useState(true); // Estado para controlar se há novas notificações
 
   const nutritionData = {
     calories: {
@@ -114,38 +116,8 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
     );
   };
 
-  const recipeIdeas = [
-    {
-      image:
-        "https://media.istockphoto.com/id/1194626748/pt/foto/roast-chicken-legs-with-fried-potatoes-and-vegetables.jpg?s=612x612&w=0&k=20&c=wKcze6D28rCVRgN4GVAKThfZ6himZxLqBxktDgsVbXQ=",
-      kitchen: "Cozinha Saudável",
-      title: "Frango assado ao molho",
-      rating: 4.9,
-      time: "20-25 min",
-      words: "980 palavras",
-    },
-    {
-      image:
-        "https://media.istockphoto.com/id/1180275119/pt/foto/homemade-mexican-baja-rice-bowl.jpg?s=612x612&w=0&k=20&c=d9XnW9kU5ZXYMaGQ9Rwalgx_5cRagU3Y7wi0hijw2Og=",
-      kitchen: "Cozinha Fit",
-      title: "Salada de quinoa com legumes",
-      rating: 4.7,
-      time: "15 min",
-      words: "750 palavras",
-    },
-    {
-      image:
-        "https://masterkitchen.com.br/wp-content/uploads/2022/02/Omelete-de-forno-com-espinafre-e-queijo-otimo-para-servir-como-brunch.jpg",
-      kitchen: "Cozinha Rápida",
-      title: "Omelete de espinafre e queijo",
-      rating: 4.8,
-      time: "10 min",
-      words: "620 palavras",
-    },
-  ];
-
-  const showWaterReminder = () => {
-    setReminderModalVisible(true);
+  const showNotifications = () => {
+    setNotificationModalVisible(true);
   };
 
   return (
@@ -163,9 +135,10 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
           <View style={styles.headerIcons}>
             <TouchableOpacity
               style={styles.iconButton}
-              onPress={showWaterReminder}
+              onPress={showNotifications}
             >
               <Feather name="bell" size={22} color="#333" />
+              {hasNewNotifications && <View style={styles.notificationDot} />}
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconButton}>
               <Feather name="user" size={22} color="#333" />
@@ -193,7 +166,7 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
           <View style={styles.caloriesContainer}>
             <View>
               <Text style={styles.caloriesLabel}>Calorias</Text>
-              <Text style={styles.caloriesValue}>2350 Cal</Text>
+              <Text style={styles.caloriesValue}>2350</Text>
             </View>
             <View style={styles.progressCircleContainer}>
               {createCircularProgress(
@@ -338,83 +311,11 @@ const DashboardScreen = ({ navigation }: TabScreenProps<"Dashboard">) => {
           <Text style={styles.sectionTitle}>Progresso de Peso</Text>
           <WeightProgressGraph />
         </View>
-
-        <View style={styles.sectionContainer}>
-          <View style={styles.sectionTitleRow}>
-            <Text style={styles.sectionTitle}>Ideias de Receitas</Text>
-            <TouchableOpacity>
-              <Text style={styles.viewMoreText}>Ver mais &gt;</Text>
-            </TouchableOpacity>
-          </View>
-
-          {recipeIdeas.map((recipe, index) => (
-            <View key={index} style={styles.recipeCard}>
-              <View style={styles.recipeImageContainer}>
-                <Image
-                  source={{ uri: recipe.image }}
-                  style={styles.recipeImage}
-                />
-              </View>
-              <View style={styles.recipeContent}>
-                <Text style={styles.recipeKitchen}>{recipe.kitchen}</Text>
-                <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                <View style={styles.recipeDetails}>
-                  <View style={styles.recipeRating}>
-                    <Feather name="star" size={14} color="#FF8A65" />
-                    <Text style={styles.recipeRatingText}>{recipe.rating}</Text>
-                  </View>
-                  <View style={styles.recipeDot} />
-                  <Text style={styles.recipeTime}>{recipe.time}</Text>
-                  <View style={styles.recipeDot} />
-                  <Text style={styles.recipeWords}>{recipe.words}</Text>
-                </View>
-              </View>
-              <TouchableOpacity style={styles.recipeAddButton}>
-                <Feather name="plus" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
       </ScrollView>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={reminderModalVisible}
-        onRequestClose={() => setReminderModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.reminderIconContainer}>
-              <Feather name="droplet" size={40} color="#FFFFFF" />
-            </View>
-            <Text style={styles.reminderTitle}>Lembrete de Água</Text>
-            <Text style={styles.reminderText}>
-              Já bebeu água hoje? Lembre-se de beber pelo menos 2 litros de água
-              por dia para manter-se hidratado.
-            </Text>
-            <View style={styles.reminderProgress}>
-              <View style={styles.reminderProgressBar}>
-                <View
-                  style={[
-                    styles.reminderProgressFill,
-                    { width: `${(userData.water / 2000) * 100}%` },
-                  ]}
-                />
-              </View>
-              <Text style={styles.reminderProgressText}>
-                {userData.water} / 2000 ml
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.reminderButton}
-              onPress={() => setReminderModalVisible(false)}
-            >
-              <Text style={styles.reminderButtonText}>Entendi</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <NotificationModal
+        visible={notificationModalVisible}
+        onClose={() => setNotificationModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -463,6 +364,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
+    position: "relative",
+  },
+  notificationDot: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FF0000",
   },
   activityCard: {
     backgroundColor: "#e950a3",
@@ -650,166 +561,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#FF8A65",
     fontFamily: "Poppins-Medium",
-  },
-  recipeCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    marginBottom: 16,
-    overflow: "hidden",
-    position: "relative",
-  },
-  recipeImageContainer: {
-    width: "100%",
-    height: 180,
-    position: "relative",
-  },
-  recipeImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  recipeOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  recipeOverlayText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "600",
-    fontFamily: "Poppins-SemiBold",
-  },
-  recipeContent: {
-    padding: 16,
-  },
-  recipeKitchen: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 4,
-    fontFamily: "Poppins-Regular",
-  },
-  recipeTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 8,
-    fontFamily: "Poppins-Bold",
-  },
-  recipeDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  recipeRating: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  recipeRatingText: {
-    fontSize: 12,
-    color: "#666",
-    marginLeft: 4,
-    fontFamily: "Poppins-Medium",
-  },
-  recipeDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "#CCC",
-    marginHorizontal: 8,
-  },
-  recipeTime: {
-    fontSize: 12,
-    color: "#666",
-    fontFamily: "Poppins-Regular",
-  },
-  recipeWords: {
-    fontSize: 12,
-    color: "#666",
-    fontFamily: "Poppins-Regular",
-  },
-  recipeAddButton: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#FF8A65",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    width: "80%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 24,
-    alignItems: "center",
-  },
-  reminderIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#FF5252",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  reminderTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 12,
-    fontFamily: "Poppins-Bold",
-  },
-  reminderText: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 20,
-    fontFamily: "Poppins-Regular",
-  },
-  reminderProgress: {
-    width: "100%",
-    marginBottom: 20,
-  },
-  reminderProgressBar: {
-    height: 10,
-    backgroundColor: "#F0F0F0",
-    borderRadius: 5,
-    marginBottom: 8,
-    overflow: "hidden",
-  },
-  reminderProgressFill: {
-    height: "100%",
-    backgroundColor: "#FF5252",
-    borderRadius: 5,
-  },
-  reminderProgressText: {
-    fontSize: 12,
-    color: "#666",
-    textAlign: "center",
-    fontFamily: "Poppins-Regular",
-  },
-  reminderButton: {
-    backgroundColor: "#FF5252",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 25,
-  },
-  reminderButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    fontFamily: "Poppins-SemiBold",
   },
 });
 

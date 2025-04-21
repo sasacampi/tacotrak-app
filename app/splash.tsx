@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { View, Text, StyleSheet, Animated, Easing } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, Text, StyleSheet, Animated, Easing, Image } from "react-native";
 import { useTheme } from "./context/ThemeContext";
 import type { ScreenProps } from "../types/navigation";
 
@@ -35,7 +34,7 @@ const SplashScreen = ({ navigation }: ScreenProps) => {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.primary }]}>
+    <View style={[styles.container, { backgroundColor: "#e950a3" }]}>
       <Animated.View
         style={[
           styles.content,
@@ -46,7 +45,11 @@ const SplashScreen = ({ navigation }: ScreenProps) => {
         ]}
       >
         <View style={styles.logoContainer}>
-          <Feather name="activity" size={60} color="#FFFFFF" />
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
         <Text style={styles.appName}>TacoTrak</Text>
         <Text style={styles.tagline}>Rastreamento nutricional inteligente</Text>
@@ -65,18 +68,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoContainer: {
+    width: 100,
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 16,
+  },
+  logo: {
+    width: "100%",
+    height: "100%",
+    tintColor: "#FFFFFF",
   },
   appName: {
     fontSize: 36,
     fontWeight: "bold",
     color: "#FFFFFF",
     marginBottom: 8,
+    fontFamily: "Poppins-Bold",
   },
   tagline: {
     fontSize: 16,
     color: "#FFFFFF",
     opacity: 0.8,
+    fontFamily: "Poppins-Regular",
   },
 });
 
