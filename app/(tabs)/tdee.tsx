@@ -50,32 +50,32 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
   const activityLevels: ActivityLevel[] = [
     {
       id: "sedentary",
-      label: "Sedentary",
-      description: "Little or no exercise",
+      label: "Sedentário",
+      description: "Pouco ou nenhum exercício",
       factor: 1.2,
     },
     {
       id: "light",
-      label: "Light Activity",
-      description: "Exercise 1-3 times/week",
+      label: "Levemente Ativo",
+      description: "Exercício 1-3 vezes/semana",
       factor: 1.375,
     },
     {
       id: "moderate",
-      label: "Moderate Activity",
-      description: "Exercise 4-5 times/week",
+      label: "Moderadamente Ativo",
+      description: "Exercício 4-5 vezes/semana",
       factor: 1.55,
     },
     {
       id: "very",
-      label: "Very Active",
-      description: "Exercise 6-7 times/week",
+      label: "Muito Ativo",
+      description: "Exercício 6-7 vezes/semana",
       factor: 1.725,
     },
     {
       id: "extreme",
-      label: "Extremely Active",
-      description: "Exercise & physical job or 2x training",
+      label: "Extremamente Ativo",
+      description: "Exercício & trabalho físico ou 2x treino",
       factor: 1.9,
     },
   ];
@@ -95,7 +95,7 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
     } else if (key === "height" && typeof value === "string") {
       // Limit height to 3 digits
       const limitedValue = value.replace(/\D/g, "").slice(0, 3);
-      setUserData({ ...userData, [key]: limitedValue });
+      setUserData({ ...userData, [key]: value });
     } else {
       setUserData({ ...userData, [key]: value });
     }
@@ -140,32 +140,26 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: "#F6F6F6" }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color={colors.text} />
+          <Feather name="arrow-left" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>
-          TDEE Calculator
-        </Text>
-        <TouchableOpacity>
-          <Feather name="settings" size={24} color={colors.text} />
-        </TouchableOpacity>
+        <Text style={styles.title}>Calculadora TDEE</Text>
+        <View style={{ width: 24 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
         {/* Gender Selection */}
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Gender</Text>
+        <Text style={styles.inputLabel}>Gênero</Text>
         <View style={styles.genderContainer}>
           <TouchableOpacity
             style={[
               styles.genderButton,
               {
                 backgroundColor:
-                  userData.gender === "male" ? colors.primary : colors.card,
-                borderColor: colors.border,
+                  userData.gender === "male" ? "#e950a3" : "#FFFFFF",
+                borderColor: userData.gender === "male" ? "#e950a3" : "#E0E0E0",
               },
             ]}
             onPress={() => updateUserData("gender", "male")}
@@ -173,10 +167,10 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
             <Text
               style={[
                 styles.genderButtonText,
-                { color: userData.gender === "male" ? "#FFFFFF" : colors.text },
+                { color: userData.gender === "male" ? "#FFFFFF" : "#333333" },
               ]}
             >
-              Male
+              Masculino
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -184,8 +178,9 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
               styles.genderButton,
               {
                 backgroundColor:
-                  userData.gender === "female" ? colors.primary : colors.card,
-                borderColor: colors.border,
+                  userData.gender === "female" ? "#e950a3" : "#FFFFFF",
+                borderColor:
+                  userData.gender === "female" ? "#e950a3" : "#E0E0E0",
               },
             ]}
             onPress={() => updateUserData("gender", "female")}
@@ -194,27 +189,22 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
               style={[
                 styles.genderButtonText,
                 {
-                  color: userData.gender === "female" ? "#FFFFFF" : colors.text,
+                  color: userData.gender === "female" ? "#FFFFFF" : "#333333",
                 },
               ]}
             >
-              Female
+              Feminino
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Age Input */}
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Age</Text>
-        <View
-          style={[
-            styles.inputContainer,
-            { borderColor: colors.border, backgroundColor: colors.card },
-          ]}
-        >
+        <Text style={styles.inputLabel}>Idade</Text>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[styles.input, { color: colors.text }]}
-            placeholder="Years"
-            placeholderTextColor={colors.gray}
+            style={styles.input}
+            placeholder="Anos"
+            placeholderTextColor="#9E9E9E"
             keyboardType="numeric"
             value={userData.age}
             onChangeText={(text) => updateUserData("age", text)}
@@ -222,47 +212,35 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
         </View>
 
         {/* Weight Input */}
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Weight</Text>
-        <View
-          style={[
-            styles.inputContainer,
-            { borderColor: colors.border, backgroundColor: colors.card },
-          ]}
-        >
+        <Text style={styles.inputLabel}>Peso</Text>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[styles.input, { color: colors.text }]}
+            style={styles.input}
             placeholder="kg"
-            placeholderTextColor={colors.gray}
+            placeholderTextColor="#9E9E9E"
             keyboardType="numeric"
             value={userData.weight}
             onChangeText={(text) => updateUserData("weight", text)}
           />
-          <Text style={[styles.inputUnit, { color: colors.gray }]}>kg/lb</Text>
+          <Text style={styles.inputUnit}>kg</Text>
         </View>
 
         {/* Height Input */}
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Height</Text>
-        <View
-          style={[
-            styles.inputContainer,
-            { borderColor: colors.border, backgroundColor: colors.card },
-          ]}
-        >
+        <Text style={styles.inputLabel}>Altura</Text>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[styles.input, { color: colors.text }]}
+            style={styles.input}
             placeholder="cm"
-            placeholderTextColor={colors.gray}
+            placeholderTextColor="#9E9E9E"
             keyboardType="numeric"
             value={userData.height}
             onChangeText={(text) => updateUserData("height", text)}
           />
-          <Text style={[styles.inputUnit, { color: colors.gray }]}>cm/ft</Text>
+          <Text style={styles.inputUnit}>cm</Text>
         </View>
 
         {/* Activity Level */}
-        <Text style={[styles.inputLabel, { color: colors.text }]}>
-          Activity Level
-        </Text>
+        <Text style={styles.inputLabel}>Nível de Atividade</Text>
         <View style={styles.activityContainer}>
           {activityLevels.map((level) => (
             <TouchableOpacity
@@ -271,10 +249,9 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
                 styles.activityButton,
                 {
                   backgroundColor:
-                    userData.activityLevel === level.id
-                      ? colors.primary
-                      : colors.card,
-                  borderColor: colors.border,
+                    userData.activityLevel === level.id ? "#e950a3" : "#FFFFFF",
+                  borderColor:
+                    userData.activityLevel === level.id ? "#e950a3" : "#E0E0E0",
                 },
               ]}
               onPress={() => updateUserData("activityLevel", level.id)}
@@ -286,7 +263,7 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
                     color:
                       userData.activityLevel === level.id
                         ? "#FFFFFF"
-                        : colors.text,
+                        : "#333333",
                   },
                 ]}
               >
@@ -299,7 +276,7 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
                     color:
                       userData.activityLevel === level.id
                         ? "#FFFFFF"
-                        : colors.gray,
+                        : "#9E9E9E",
                   },
                 ]}
               >
@@ -311,81 +288,52 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
 
         {/* TDEE Results */}
         {hasCalculated && (
-          <View
-            style={[
-              styles.resultsContainer,
-              { backgroundColor: colors.card, borderColor: colors.border },
-            ]}
-          >
-            <Text style={[styles.resultsTitle, { color: colors.text }]}>
-              Your Daily Calories
-            </Text>
+          <View style={styles.resultsContainer}>
+            <Text style={styles.resultsTitle}>Suas Calorias Diárias</Text>
 
-            <Text style={[styles.tdeeValue, { color: colors.text }]}>
-              {formatNumber(tdee)}
-            </Text>
-            <Text style={[styles.tdeeSubtitle, { color: colors.gray }]}>
-              Maintenance Calories
-            </Text>
+            <Text style={styles.tdeeValue}>{formatNumber(tdee)}</Text>
+            <Text style={styles.tdeeSubtitle}>Calorias de Manutenção</Text>
 
-            <View
-              style={[styles.divider, { backgroundColor: colors.border }]}
-            />
+            <View style={styles.divider} />
 
             <View style={styles.optionsContainer}>
               <View style={styles.optionColumn}>
-                <Text style={[styles.optionLabel, { color: colors.text }]}>
-                  Weight Loss (-20%)
-                </Text>
-                <Text style={[styles.optionValue, { color: colors.primary }]}>
+                <Text style={styles.optionLabel}>Perda de Peso (-20%)</Text>
+                <Text style={styles.optionValue}>
                   {formatNumber(cuttingCalories)} cal
                 </Text>
               </View>
 
-              <View
-                style={[
-                  styles.verticalDivider,
-                  { backgroundColor: colors.border },
-                ]}
-              />
+              <View style={styles.verticalDivider} />
 
               <View style={styles.optionColumn}>
-                <Text style={[styles.optionLabel, { color: colors.text }]}>
-                  Weight Gain (+20%)
-                </Text>
-                <Text style={[styles.optionValue, { color: colors.primary }]}>
+                <Text style={styles.optionLabel}>Ganho de Peso (+20%)</Text>
+                <Text style={styles.optionValue}>
                   {formatNumber(bulkingCalories)} cal
                 </Text>
               </View>
             </View>
 
-            <View
-              style={[styles.additionalInfo, { borderTopColor: colors.border }]}
-            >
+            <View style={styles.additionalInfo}>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: colors.gray }]}>
-                  BMR:
-                </Text>
-                <Text style={[styles.infoValue, { color: colors.text }]}>
-                  {bmr} calories/day
-                </Text>
+                <Text style={styles.infoLabel}>TMB:</Text>
+                <Text style={styles.infoValue}>{bmr} calorias/dia</Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: colors.gray }]}>
-                  Activity Multiplier:
+                <Text style={styles.infoLabel}>
+                  Multiplicador de Atividade:
                 </Text>
-                <Text style={[styles.infoValue, { color: colors.text }]}>
-                  x{activityMultiplier}
-                </Text>
+                <Text style={styles.infoValue}>x{activityMultiplier}</Text>
               </View>
             </View>
           </View>
         )}
 
         <Button
-          title="Calculate TDEE"
+          title="Calcular TDEE"
           onPress={calculateTDEE}
           style={styles.calculateButton}
+          variant="primary"
         />
       </ScrollView>
     </SafeAreaView>
@@ -402,11 +350,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
   },
   title: {
     fontSize: 20,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
+    color: "#333333",
   },
   content: {
     padding: 20,
@@ -417,6 +369,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "500",
     fontFamily: "Poppins-Medium",
+    color: "#333333",
   },
   genderContainer: {
     flexDirection: "row",
@@ -427,7 +380,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 8,
+    borderRadius: 25,
     borderWidth: 1,
     marginRight: 8,
   },
@@ -440,27 +393,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 50,
-    borderRadius: 8,
+    borderRadius: 25,
     borderWidth: 1,
+    borderColor: "#E0E0E0",
     paddingHorizontal: 16,
     marginBottom: 20,
+    backgroundColor: "#FFFFFF",
   },
   input: {
     flex: 1,
     height: "100%",
     fontSize: 16,
     fontFamily: "Poppins-Regular",
+    color: "#333333",
   },
   inputUnit: {
     fontSize: 14,
     fontFamily: "Poppins-Regular",
+    color: "#9E9E9E",
   },
   activityContainer: {
     marginBottom: 24,
   },
   activityButton: {
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 8,
   },
@@ -478,29 +435,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
     padding: 24,
-    borderRadius: 16,
+    borderRadius: 25,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
+    borderColor: "#F0F0F0",
   },
   resultsTitle: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 16,
     fontFamily: "Poppins-SemiBold",
+    color: "#333333",
   },
   tdeeValue: {
     fontSize: 42,
     fontWeight: "bold",
     fontFamily: "Poppins-Bold",
+    color: "#e950a3",
   },
   tdeeSubtitle: {
     fontSize: 16,
     marginBottom: 16,
     fontFamily: "Poppins-Regular",
+    color: "#9E9E9E",
   },
   divider: {
     height: 1,
     width: "100%",
     marginVertical: 16,
+    backgroundColor: "#F0F0F0",
   },
   optionsContainer: {
     flexDirection: "row",
@@ -515,22 +478,26 @@ const styles = StyleSheet.create({
     width: 1,
     height: "100%",
     marginHorizontal: 16,
+    backgroundColor: "#F0F0F0",
   },
   optionLabel: {
     fontSize: 14,
     marginBottom: 8,
     fontFamily: "Poppins-Regular",
+    color: "#333333",
   },
   optionValue: {
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
+    color: "#e950a3",
   },
   additionalInfo: {
     width: "100%",
     marginTop: 24,
     paddingTop: 16,
     borderTopWidth: 1,
+    borderTopColor: "#F0F0F0",
   },
   infoRow: {
     flexDirection: "row",
@@ -540,14 +507,18 @@ const styles = StyleSheet.create({
   infoLabel: {
     fontSize: 14,
     fontFamily: "Poppins-Regular",
+    color: "#9E9E9E",
   },
   infoValue: {
     fontSize: 14,
     fontWeight: "500",
     fontFamily: "Poppins-Medium",
+    color: "#333333",
   },
   calculateButton: {
     height: 56,
+    backgroundColor: "#e950a3",
+    borderRadius: 28,
   },
 });
 
