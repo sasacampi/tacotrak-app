@@ -14,9 +14,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "./context/ThemeContext";
-import Button from "../components/Button";
 import type { ScreenProps } from "../types/navigation";
 
+// Vamos atualizar o componente RegisterScreen para corresponder ao design atual
+// com cantos arredondados e textos em português
+
+// Atualizar os textos para português e ajustar o estilo dos inputs e botões
 const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
   const { colors } = useTheme();
   const [name, setName] = useState("");
@@ -58,9 +61,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: "#FFFFFF" }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
@@ -68,52 +69,33 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Feather name="arrow-left" size={24} color={colors.text} />
+              <Feather name="arrow-left" size={24} color="#333" />
             </TouchableOpacity>
-            <Text style={[styles.title, { color: colors.text }]}>
-              Criar Conta
-            </Text>
+            <Text style={styles.title}>Criar Conta</Text>
             <View style={{ width: 24 }} />
           </View>
 
           <View style={styles.formContainer}>
             {error ? (
-              <View
-                style={[
-                  styles.errorContainer,
-                  {
-                    backgroundColor: colors.danger + "20",
-                    borderColor: colors.danger,
-                  },
-                ]}
-              >
-                <Feather name="alert-circle" size={16} color={colors.danger} />
-                <Text style={[styles.errorText, { color: colors.danger }]}>
-                  {error}
-                </Text>
+              <View style={styles.errorContainer}>
+                <Feather name="alert-circle" size={16} color="#F44336" />
+                <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Nome
-              </Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
+              <Text style={styles.inputLabel}>Nome</Text>
+              <View style={styles.inputContainer}>
                 <Feather
                   name="user"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Seu nome"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   value={name}
                   onChangeText={setName}
                 />
@@ -121,25 +103,18 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Email
-              </Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
+              <Text style={styles.inputLabel}>Email</Text>
+              <View style={styles.inputContainer}>
                 <Feather
                   name="mail"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Seu email"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   keyboardType="email-address"
                   autoCapitalize="none"
                   value={email}
@@ -149,25 +124,18 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Senha
-              </Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
+              <Text style={styles.inputLabel}>Senha</Text>
+              <View style={styles.inputContainer}>
                 <Feather
                   name="lock"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Sua senha"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
@@ -178,32 +146,25 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                   <Feather
                     name={showPassword ? "eye-off" : "eye"}
                     size={20}
-                    color={colors.gray}
+                    color="#9E9E9E"
                   />
                 </TouchableOpacity>
               </View>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Confirmar Senha
-              </Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
+              <Text style={styles.inputLabel}>Confirmar Senha</Text>
+              <View style={styles.inputContainer}>
                 <Feather
                   name="lock"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Confirme sua senha"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showConfirmPassword}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -214,27 +175,26 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                   <Feather
                     name={showConfirmPassword ? "eye-off" : "eye"}
                     size={20}
-                    color={colors.gray}
+                    color="#9E9E9E"
                   />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <Button
-              title="Criar Conta"
-              onPress={handleRegister}
-              loading={isLoading}
+            <TouchableOpacity
               style={styles.registerButton}
-            />
+              onPress={handleRegister}
+              disabled={isLoading}
+            >
+              <Text style={styles.registerButtonText}>
+                {isLoading ? "Processando..." : "Criar Conta"}
+              </Text>
+            </TouchableOpacity>
 
             <View style={styles.loginPrompt}>
-              <Text style={[styles.loginPromptText, { color: colors.text }]}>
-                Já tem uma conta?{" "}
-              </Text>
+              <Text style={styles.loginPromptText}>Já tem uma conta? </Text>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={[styles.loginLink, { color: colors.primary }]}>
-                  Entrar
-                </Text>
+                <Text style={styles.loginLink}>Entrar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -244,6 +204,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
   );
 };
 
+// Atualizar os estilos para corresponder ao design atual
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -253,7 +214,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 20,
+    padding: 24,
   },
   header: {
     flexDirection: "row",
@@ -264,6 +225,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#333333",
+    fontFamily: "Poppins-Bold",
   },
   formContainer: {
     width: "100%",
@@ -272,29 +235,37 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
     marginBottom: 16,
+    backgroundColor: "#FFEBEE",
+    borderColor: "#F44336",
   },
   errorText: {
     marginLeft: 8,
     fontSize: 14,
+    color: "#F44336",
+    fontFamily: "Poppins-Regular",
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 8,
     fontWeight: "500",
+    color: "#333333",
+    fontFamily: "Poppins-Medium",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     height: 50,
-    borderRadius: 12,
+    borderRadius: 25,
     paddingHorizontal: 16,
     borderWidth: 1,
+    borderColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
   },
   inputIcon: {
     marginRight: 12,
@@ -303,10 +274,23 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     fontSize: 16,
+    color: "#333333",
+    fontFamily: "Poppins-Regular",
   },
   registerButton: {
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#e950a3",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 16,
     marginBottom: 24,
+  },
+  registerButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
   loginPrompt: {
     flexDirection: "row",
@@ -315,10 +299,14 @@ const styles = StyleSheet.create({
   },
   loginPromptText: {
     fontSize: 14,
+    color: "#666666",
+    fontFamily: "Poppins-Regular",
   },
   loginLink: {
     fontSize: 14,
     fontWeight: "600",
+    color: "#e950a3",
+    fontFamily: "Poppins-SemiBold",
   },
 });
 
