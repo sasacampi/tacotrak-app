@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   View,
   Text,
@@ -10,14 +11,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "./context/ThemeContext";
-import Button from "../components/Button";
 import type { ScreenProps } from "../types/navigation";
 
-const LoginScreen = ({ navigation }: ScreenProps) => {
+const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
   const { colors } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +46,7 @@ const LoginScreen = ({ navigation }: ScreenProps) => {
         navigation.navigate("Onboarding");
       } else {
         setIsLoading(false);
-        setError("Email ou senha inválidos. Tente novamente.");
+        setError("A senha que você digitou está incorreta");
       }
     }, 1500);
   };
@@ -60,70 +61,45 @@ const LoginScreen = ({ navigation }: ScreenProps) => {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: "#FFFFFF" }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.logoContainer}>
-            <View
-              style={[styles.logoCircle, { backgroundColor: colors.primary }]}
-            >
-              <Feather name="activity" size={40} color="#FFFFFF" />
+          <View style={styles.header}>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("../assets/images/logo.png")}
+                style={styles.logoImage}
+                resizeMode="cover"
+              />
             </View>
-            <Text style={[styles.logoText, { color: colors.primary }]}>
-              TacoTrak
-            </Text>
-            <Text style={[styles.tagline, { color: colors.text }]}>
-              Rastreamento nutricional inteligente
-            </Text>
+            <Text style={styles.appName}>TACOTRAK</Text>
           </View>
 
           <View style={styles.formContainer}>
-            <Text style={[styles.formTitle, { color: colors.text }]}>
-              Login
-            </Text>
-
-            {error ? (
-              <View
-                style={[
-                  styles.errorContainer,
-                  {
-                    backgroundColor: colors.danger + "20",
-                    borderColor: colors.danger,
-                  },
-                ]}
-              >
-                <Feather name="alert-circle" size={16} color={colors.danger} />
-                <Text style={[styles.errorText, { color: colors.danger }]}>
-                  {error}
-                </Text>
-              </View>
-            ) : null}
+            <Text style={styles.formTitle}>Entre na sua conta</Text>
+            <View style={styles.mockCredentialsContainer}>
+              <Text style={styles.mockCredentialsText}>
+                Credenciais de demonstração: {mockCredentials.email} /{" "}
+                {mockCredentials.password}
+              </Text>
+            </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Email
-              </Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
+              <Text style={styles.inputLabel}>Email</Text>
+              <View style={styles.inputContainer}>
                 <Feather
                   name="mail"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Seu email"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   keyboardType="email-address"
                   autoCapitalize="none"
                   value={email}
@@ -133,25 +109,23 @@ const LoginScreen = ({ navigation }: ScreenProps) => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>
-                Senha
-              </Text>
+              <Text style={styles.inputLabel}>Senha</Text>
               <View
                 style={[
                   styles.inputContainer,
-                  { backgroundColor: colors.card, borderColor: colors.border },
+                  error ? styles.inputError : null,
                 ]}
               >
                 <Feather
                   name="lock"
                   size={20}
-                  color={colors.gray}
+                  color="#9E9E9E"
                   style={styles.inputIcon}
                 />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={styles.input}
                   placeholder="Sua senha"
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
@@ -162,52 +136,66 @@ const LoginScreen = ({ navigation }: ScreenProps) => {
                   <Feather
                     name={showPassword ? "eye-off" : "eye"}
                     size={20}
-                    color={colors.gray}
+                    color="#9E9E9E"
                   />
                 </TouchableOpacity>
               </View>
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
             </View>
 
             <TouchableOpacity
               style={styles.forgotPasswordContainer}
               onPress={handleForgotPassword}
             >
-              <Text
-                style={[styles.forgotPasswordText, { color: colors.primary }]}
-              >
-                Esqueceu sua senha?
+              <Text style={styles.forgotPasswordText}>Esqueceu sua senha?</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.loginButton, { backgroundColor: "#3A3E4F" }]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              <Text style={styles.loginButtonText}>
+                {isLoading ? "Entrando..." : "Entrar"}
               </Text>
             </TouchableOpacity>
 
-            <Button
-              title="Entrar"
-              onPress={handleLogin}
-              loading={isLoading}
-              style={styles.loginButton}
-            />
-
-            <View style={styles.dividerContainer}>
-              <View
-                style={[styles.divider, { backgroundColor: colors.border }]}
-              />
-              <Text style={[styles.dividerText, { color: colors.gray }]}>
-                OU
-              </Text>
-              <View
-                style={[styles.divider, { backgroundColor: colors.border }]}
-              />
+            <View style={styles.orContainer}>
+              <View style={styles.orLine} />
+              <Text style={styles.orText}>ou</Text>
+              <View style={styles.orLine} />
             </View>
 
-            <Button
-              title="Criar uma conta"
-              onPress={handleRegister}
-              variant="outline"
-              style={styles.registerButton}
-            />
+            <View style={styles.socialButtonsContainer}>
+              <TouchableOpacity style={styles.socialButton}>
+                <View style={styles.socialIconContainer}>
+                  <Text style={{ fontWeight: "bold", color: "#4285F4" }}>
+                    G
+                  </Text>
+                </View>
+              </TouchableOpacity>
 
-            <Text style={[styles.demoText, { color: colors.gray }]}>
-              Demo: user@example.com / password123
-            </Text>
+              <TouchableOpacity style={styles.socialButton}>
+                <View style={styles.socialIconContainer}>
+                  <Feather name="facebook" size={20} color="#1877F2" />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.socialButton}>
+                <View style={styles.socialIconContainer}>
+                  <Feather name="twitter" size={20} color="#1DA1F2" />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.registerContainer}>
+              <Text style={styles.registerText}>Ainda não tem uma conta? </Text>
+              <TouchableOpacity onPress={handleRegister}>
+                <Text style={[styles.registerLink, { color: "#e950a3" }]}>
+                  Cadastre-se
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -224,28 +212,31 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 20,
+    padding: 24,
   },
-  logoContainer: {
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 40,
   },
-  logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
+  logoContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    overflow: "hidden",
   },
-  logoText: {
-    fontSize: 32,
+  logoImage: {
+    width: "100%",
+    height: "100%",
+  },
+  appName: {
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 8,
-  },
-  tagline: {
-    fontSize: 16,
+    color: "#3A3E4F",
+    fontFamily: "Poppins-Bold",
+    marginLeft: 10,
+    marginTop: 8,
   },
   formContainer: {
     width: "100%",
@@ -253,35 +244,45 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 24,
     fontWeight: "bold",
+    marginBottom: 32,
+    fontFamily: "Poppins-Bold",
+    color: "#000000",
+  },
+  mockCredentialsContainer: {
     marginBottom: 24,
-  },
-  errorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
+    padding: 10,
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
-    borderWidth: 1,
-    marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: "#3A3E4F",
   },
-  errorText: {
-    marginLeft: 8,
-    fontSize: 14,
+  mockCredentialsText: {
+    fontSize: 12,
+    color: "#666666",
+    fontFamily: "Poppins-Regular",
   },
   inputGroup: {
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 8,
     fontWeight: "500",
+    color: "#000000",
+    fontFamily: "Poppins-Medium",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     height: 50,
-    borderRadius: 12,
+    borderRadius: 8,
     paddingHorizontal: 16,
     borderWidth: 1,
+    borderColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
+  },
+  inputError: {
+    borderColor: "#F44336",
   },
   inputIcon: {
     marginRight: 12,
@@ -290,6 +291,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     fontSize: 16,
+    color: "#000000",
+    fontFamily: "Poppins-Regular",
+  },
+  errorText: {
+    color: "#F44336",
+    fontSize: 12,
+    marginTop: 4,
+    fontFamily: "Poppins-Regular",
   },
   forgotPasswordContainer: {
     alignItems: "flex-end",
@@ -298,30 +307,68 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 14,
     fontWeight: "500",
+    color: "#e950a3",
+    fontFamily: "Poppins-Medium",
   },
   loginButton: {
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
   },
-  dividerContainer: {
+  loginButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
+  },
+  orContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
   },
-  divider: {
+  orLine: {
     flex: 1,
     height: 1,
+    backgroundColor: "#E0E0E0",
   },
-  dividerText: {
+  orText: {
     marginHorizontal: 16,
+    color: "#9E9E9E",
     fontSize: 14,
+    fontFamily: "Poppins-Regular",
   },
-  registerButton: {
-    marginBottom: 24,
+  socialButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 32,
   },
-  demoText: {
-    textAlign: "center",
-    fontSize: 12,
-    marginTop: 8,
+  socialButton: {
+    marginHorizontal: 12,
+  },
+  socialIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+  },
+  registerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  registerText: {
+    fontSize: 14,
+    color: "#757575",
+    fontFamily: "Poppins-Regular",
+  },
+  registerLink: {
+    fontSize: 14,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
   },
 });
 
