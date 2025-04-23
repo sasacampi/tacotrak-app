@@ -93,14 +93,11 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Email</Text>
               <View style={styles.inputContainer}>
-                <Feather
-                  name="mail"
-                  size={20}
-                  color="#9E9E9E"
-                  style={styles.inputIcon}
-                />
                 <TextInput
-                  style={styles.input}
+                  style={[
+                    styles.input,
+                    { color: colors.text, textAlign: "center" },
+                  ]}
                   placeholder="Seu email"
                   placeholderTextColor="#9E9E9E"
                   keyboardType="email-address"
@@ -119,14 +116,11 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
                   error ? styles.inputError : null,
                 ]}
               >
-                <Feather
-                  name="lock"
-                  size={20}
-                  color="#9E9E9E"
-                  style={styles.inputIcon}
-                />
                 <TextInput
-                  style={styles.input}
+                  style={[
+                    styles.input,
+                    { color: colors.text, textAlign: "center" },
+                  ]}
                   placeholder="Sua senha"
                   placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showPassword}
@@ -194,7 +188,7 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
             <View style={styles.registerContainer}>
               <Text style={styles.registerText}>Ainda não tem uma conta? </Text>
               <TouchableOpacity onPress={handleRegister}>
-                <Text style={[styles.registerLink, { color: "#e950a3" }]}>
+                <Text style={[styles.registerLink, { color: "#fc6a2d" }]}>
                   Cadastre-se
                 </Text>
               </TouchableOpacity>
@@ -310,7 +304,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#e950a3",
+    color: "#fc6a2d",
     fontFamily: "Poppins-Medium",
   },
   loginButton: {

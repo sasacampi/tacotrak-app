@@ -32,9 +32,9 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
     {
       id: "1",
       type: "workout",
-      title: "Treino",
-      message: "Está na hora do seu treino, se apresse e prepare-se!",
-      time: "1m atrás",
+      title: "Work out",
+      message: "It's your Work out time, hurry up! and get ready.",
+      time: "1m ago",
       icon: "activity",
     },
     {
@@ -42,7 +42,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
       type: "water",
       title: "Beber água",
       message: "Já bebeu água hoje? Lembre-se de se manter hidratado.",
-      time: "15m atrás",
+      time: "15m ago",
       icon: "droplet",
     },
   ];
@@ -51,9 +51,9 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
     {
       id: "3",
       type: "workout",
-      title: "Treino",
-      message: "Está na hora do seu treino, se apresse e prepare-se!",
-      time: "2h atrás",
+      title: "Work out",
+      message: "It's your Work out time, hurry up! and get ready.",
+      time: "2h ago",
       icon: "activity",
     },
     {
@@ -61,19 +61,88 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
       type: "water",
       title: "Beber água",
       message: "Já bebeu água hoje? Lembre-se de se manter hidratado.",
-      time: "1d atrás",
+      time: "1d ago",
       icon: "droplet",
     },
   ];
 
+  // Vamos atualizar o estilo do modal para usar a cor rosa (#e950a3)
+
+  // Atualizar o estilo do cabeçalho do modal
+  const modalHeader = {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+    backgroundColor: "#fc6a2d", // Adicionando cor rosa ao cabeçalho
+  };
+
+  // Atualizar o estilo do título do modal para texto branco
+  const modalTitle = {
+    fontSize: 18,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
+    color: "#FFFFFF", // Mudando para branco para contrastar com o fundo rosa
+  };
+
+  // Atualizar o botão de fechar para branco
+  const closeButton = {
+    padding: 4,
+    color: "#FFFFFF", // Mudando para branco
+  };
+
+  // Atualizar o renderNotificationItem para usar a cor rosa nos ícones
+  const renderNotificationItem = (item: NotificationItem) => (
+    <View key={item.id} style={styles.notificationItem}>
+      <View
+        style={[
+          styles.notificationIconContainer,
+          { backgroundColor: "#fc6a2d20" },
+        ]}
+      >
+        <Feather name={item.icon} size={20} color="#fc6a2d" />
+      </View>
+      <View style={styles.notificationContent}>
+        <Text style={styles.notificationTitle}>{item.title}</Text>
+        <Text style={styles.notificationMessage}>{item.message}</Text>
+      </View>
+      <View style={styles.notificationTimeContainer}>
+        <Text
+          style={[
+            styles.notificationTime,
+            { backgroundColor: "#fc6a2d20", color: "#fc6a2d" },
+          ]}
+        >
+          {item.time}
+        </Text>
+      </View>
+    </View>
+  );
+
+  // Atualizar o estilo do título da seção "Previous" para usar a cor rosa
+  const sectionTitle = {
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: "Poppins-SemiBold",
+    color: "#fc6a2d", // Mudando para rosa
+    marginTop: 20,
+    marginBottom: 12,
+  };
+
+  // Atualizar o return do componente para usar os novos estilos
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Notificações</Text>
+          <View style={[styles.modalHeader, { backgroundColor: "#fc6a2d" }]}>
+            <Text style={[styles.modalTitle, { color: "#FFFFFF" }]}>
+              Notification
+            </Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Feather name="x" size={24} color="#333" />
+              <Feather name="x" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
 
@@ -86,8 +155,13 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
               <>
                 {currentNotifications.map((item) => (
                   <View key={item.id} style={styles.notificationItem}>
-                    <View style={styles.notificationIconContainer}>
-                      <Feather name={item.icon} size={20} color="#e950a3" />
+                    <View
+                      style={[
+                        styles.notificationIconContainer,
+                        { backgroundColor: "#fc6a2d20" },
+                      ]}
+                    >
+                      <Feather name={item.icon} size={20} color="#fc6a2d" />
                     </View>
                     <View style={styles.notificationContent}>
                       <Text style={styles.notificationTitle}>{item.title}</Text>
@@ -96,7 +170,14 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
                       </Text>
                     </View>
                     <View style={styles.notificationTimeContainer}>
-                      <Text style={styles.notificationTime}>{item.time}</Text>
+                      <Text
+                        style={[
+                          styles.notificationTime,
+                          { backgroundColor: "#fc6a2d20", color: "#fc6a2d" },
+                        ]}
+                      >
+                        {item.time}
+                      </Text>
                     </View>
                   </View>
                 ))}
@@ -106,11 +187,18 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
             {/* Notificações anteriores */}
             {previousNotifications.length > 0 && (
               <>
-                <Text style={styles.sectionTitle}>Anteriores</Text>
+                <Text style={[styles.sectionTitle, { color: "#fc6a2d" }]}>
+                  Previous
+                </Text>
                 {previousNotifications.map((item) => (
                   <View key={item.id} style={styles.notificationItem}>
-                    <View style={styles.notificationIconContainer}>
-                      <Feather name={item.icon} size={20} color="#e950a3" />
+                    <View
+                      style={[
+                        styles.notificationIconContainer,
+                        { backgroundColor: "#fc6a2d20" },
+                      ]}
+                    >
+                      <Feather name={item.icon} size={20} color="#fc6a2d" />
                     </View>
                     <View style={styles.notificationContent}>
                       <Text style={styles.notificationTitle}>{item.title}</Text>
@@ -119,7 +207,14 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
                       </Text>
                     </View>
                     <View style={styles.notificationTimeContainer}>
-                      <Text style={styles.notificationTime}>{item.time}</Text>
+                      <Text
+                        style={[
+                          styles.notificationTime,
+                          { backgroundColor: "#fc6a2d20", color: "#fc6a2d" },
+                        ]}
+                      >
+                        {item.time}
+                      </Text>
                     </View>
                   </View>
                 ))}
@@ -171,7 +266,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
-    color: "#e950a3",
+    color: "#333",
     marginTop: 20,
     marginBottom: 12,
   },

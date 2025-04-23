@@ -141,7 +141,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
               key={period}
               style={[
                 styles.periodOption,
-                selectedPeriod === period && { backgroundColor: "#e950a3" },
+                selectedPeriod === period && { backgroundColor: "#3A3E4F" },
               ]}
               onPress={() => setSelectedPeriod(period)}
             >
@@ -160,7 +160,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
 
       {selectedPoint && (
         <View
-          style={[styles.selectedPointCard, { backgroundColor: "#e950a3" }]}
+          style={[styles.selectedPointCard, { backgroundColor: "#fc6a2d" }]}
         >
           <Text style={styles.selectedPointDate}>{selectedPoint.date}</Text>
           <Text style={styles.selectedPointWeight}>
@@ -223,7 +223,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
             strokeDasharray="5,5"
           />
 
-          <Path d={path} fill="none" stroke="#e950a3" strokeWidth="3" />
+          <Path d={path} fill="none" stroke="#fc6a2d" strokeWidth="3" />
 
           {data.map((item, index) => (
             <Circle
@@ -231,7 +231,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
               cx={getX(index)}
               cy={getY(item.weight)}
               r="6"
-              fill={selectedPoint === item ? "#e950a3" : "white"}
+              fill={selectedPoint === item ? "#fc6a2d" : "white"}
               stroke="#FF8A65"
               strokeWidth="2"
               onPress={() => handlePointPress(item)}
@@ -241,7 +241,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
       </View>
 
       <TouchableOpacity
-        style={[styles.addButton, { backgroundColor: "#e950a3" }]}
+        style={[styles.addButton, { backgroundColor: "#fc6a2d" }]}
         onPress={() => setModalVisible(true)}
       >
         <Feather name="plus" size={16} color="#FFFFFF" />
@@ -280,7 +280,7 @@ const WeightProgressGraph: React.FC<WeightProgressGraphProps> = ({
                 style={[
                   styles.modalButton,
                   styles.saveButton,
-                  { backgroundColor: "#e950a3" },
+                  { backgroundColor: "#fc6a2d" },
                 ]}
                 onPress={handleAddWeight}
               >
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold",
   },
   saveButton: {
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
   },
   saveButtonText: {
     color: "#FFFFFF",

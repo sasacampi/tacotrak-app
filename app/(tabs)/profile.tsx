@@ -178,10 +178,10 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
             <View
               style={[
                 styles.statIconContainer,
-                { backgroundColor: "#e950a320" },
+                { backgroundColor: "#fc6a2d20" },
               ]}
             >
-              <Feather name="pie-chart" size={18} color="#e950a3" />
+              <Feather name="pie-chart" size={18} color="#fc6a2d" />
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Meta Diária de Calorias</Text>
@@ -195,10 +195,10 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
             <View
               style={[
                 styles.statIconContainer,
-                { backgroundColor: "#e950a320" },
+                { backgroundColor: "#fc6a2d20" },
               ]}
             >
-              <Feather name="trending-down" size={18} color="#e950a3" />
+              <Feather name="trending-down" size={18} color="#fc6a2d" />
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Perda de Peso Semanal</Text>
@@ -212,10 +212,10 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
             <View
               style={[
                 styles.statIconContainer,
-                { backgroundColor: "#e950a320" },
+                { backgroundColor: "#fc6a2d20" },
               ]}
             >
-              <Feather name="activity" size={18} color="#e950a3" />
+              <Feather name="activity" size={18} color="#fc6a2d" />
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Nível de Atividade</Text>
@@ -230,10 +230,10 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
             <View
               style={[
                 styles.statIconContainer,
-                { backgroundColor: "#e950a320" },
+                { backgroundColor: "#fc6a2d20" },
               ]}
             >
-              <Feather name="target" size={18} color="#e950a3" />
+              <Feather name="target" size={18} color="#fc6a2d" />
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Objetivo</Text>
@@ -255,7 +255,7 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
                     styles.achievementIcon,
                     {
                       backgroundColor: achievement.completed
-                        ? "#e950a320"
+                        ? "#fc6a2d20"
                         : "#F5F5F5",
                     },
                   ]}
@@ -263,7 +263,7 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
                   <Feather
                     name={achievement.icon as any}
                     size={24}
-                    color={achievement.completed ? "#e950a3" : "#9E9E9E"}
+                    color={achievement.completed ? "#fc6a2d" : "#9E9E9E"}
                   />
                 </View>
                 <Text
@@ -324,8 +324,8 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
                     style={[
                       styles.goalOption,
                       editValue === option.value && {
-                        backgroundColor: "#e950a320",
-                        borderColor: "#e950a3",
+                        backgroundColor: "#fc6a2d20",
+                        borderColor: "#fc6a2d",
                       },
                     ]}
                     onPress={() => selectGoal(option.value)}
@@ -334,7 +334,7 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
                       style={[
                         styles.goalOptionText,
                         editValue === option.value && {
-                          color: "#e950a3",
+                          color: "#fc6a2d",
                           fontWeight: "600",
                         },
                       ]}
@@ -345,7 +345,7 @@ const ProfileScreen = ({ navigation }: TabScreenProps<"Profile">) => {
                       <Feather
                         name="check"
                         size={18}
-                        color="#e950a3"
+                        color="#fc6a2d"
                         style={styles.goalOptionCheck}
                       />
                     )}
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   editButton: {
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
     width: 36,
     height: 36,
     borderRadius: 18,
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
   metricValue: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#e950a3",
+    color: "#fc6a2d",
     fontFamily: "Poppins-Bold",
   },
   metricLabel: {
@@ -580,7 +580,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
     paddingVertical: 14,
     borderRadius: 25,
     marginTop: 10,
@@ -664,7 +664,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
   },
   modalSaveText: {
     color: "#FFFFFF",

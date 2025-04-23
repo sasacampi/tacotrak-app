@@ -31,7 +31,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     card: "#FFFFFF",
     text: "#333333",
     border: "#F0F0F0",
-    primary: "#8676FF", // Main purple color
+    primary: "#fc6a2d", // Changed from "#e950a3" to orange
     secondary: "#4DB5FF", // Blue color
     accent: "#B4A9FF", // Light purple
     success: "#4CAF50",

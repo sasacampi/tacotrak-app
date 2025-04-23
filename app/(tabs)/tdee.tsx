@@ -158,8 +158,8 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
               styles.genderButton,
               {
                 backgroundColor:
-                  userData.gender === "male" ? "#e950a3" : "#FFFFFF",
-                borderColor: userData.gender === "male" ? "#e950a3" : "#E0E0E0",
+                  userData.gender === "male" ? "#fc6a2d" : "#FFFFFF",
+                borderColor: userData.gender === "male" ? "#fc6a2d" : "#E0E0E0",
               },
             ]}
             onPress={() => updateUserData("gender", "male")}
@@ -178,9 +178,9 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
               styles.genderButton,
               {
                 backgroundColor:
-                  userData.gender === "female" ? "#e950a3" : "#FFFFFF",
+                  userData.gender === "female" ? "#fc6a2d" : "#FFFFFF",
                 borderColor:
-                  userData.gender === "female" ? "#e950a3" : "#E0E0E0",
+                  userData.gender === "female" ? "#fc6a2d" : "#E0E0E0",
               },
             ]}
             onPress={() => updateUserData("gender", "female")}
@@ -249,9 +249,9 @@ const TDEECalculatorScreen = ({ navigation }: TabScreenProps<"Macros">) => {
                 styles.activityButton,
                 {
                   backgroundColor:
-                    userData.activityLevel === level.id ? "#e950a3" : "#FFFFFF",
+                    userData.activityLevel === level.id ? "#fc6a2d" : "#FFFFFF",
                   borderColor:
-                    userData.activityLevel === level.id ? "#e950a3" : "#E0E0E0",
+                    userData.activityLevel === level.id ? "#fc6a2d" : "#E0E0E0",
                 },
               ]}
               onPress={() => updateUserData("activityLevel", level.id)}
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     fontSize: 42,
     fontWeight: "bold",
     fontFamily: "Poppins-Bold",
-    color: "#e950a3",
+    color: "#fc6a2d",
   },
   tdeeSubtitle: {
     fontSize: 16,
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
-    color: "#e950a3",
+    color: "#fc6a2d",
   },
   additionalInfo: {
     width: "100%",

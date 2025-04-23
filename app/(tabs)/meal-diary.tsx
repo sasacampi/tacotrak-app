@@ -376,7 +376,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: "#e950a3" }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: "#fc6a2d" }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather name="chevron-left" size={24} color="#FFFFFF" />
@@ -748,7 +748,7 @@ const MealDiaryScreen = ({ navigation }: TabScreenProps<"MealDiary">) => {
                       <View
                         style={[
                           styles.macroCircleInner,
-                          { borderColor: "#e950a3" },
+                          { borderColor: "#fc6a2d" },
                         ]}
                       >
                         {selectedFood && (
@@ -1228,7 +1228,7 @@ const styles = StyleSheet.create({
   foodDetailCaloriesText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#e950a3",
+    color: "#3A3E4F",
     marginLeft: 5,
     fontFamily: "Poppins-SemiBold",
   },
