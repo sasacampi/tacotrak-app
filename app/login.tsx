@@ -94,10 +94,7 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
               <Text style={styles.inputLabel}>Email</Text>
               <View style={styles.inputContainer}>
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Seu email"
                   placeholderTextColor="#9E9E9E"
                   keyboardType="email-address"
@@ -117,10 +114,7 @@ const LoginScreen = ({ navigation }: ScreenProps<"Login">) => {
                 ]}
               >
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Sua senha"
                   placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showPassword}
@@ -272,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 50,
-    borderRadius: 8,
+    borderRadius: 25,
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: "#E0E0E0",
@@ -289,7 +283,7 @@ const styles = StyleSheet.create({
     height: "100%",
     fontSize: 16,
     color: "#000000",
-    fontFamily: "Poppins-Regular",
+    fontFamily: "Montserrat-Regular",
   },
   errorText: {
     color: "#F44336",

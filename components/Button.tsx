@@ -41,13 +41,13 @@ const Button: React.FC<ButtonProps> = ({
 
     switch (variant) {
       case "primary":
-        return colors.primary;
+        return "#3A3E4F";
       case "secondary":
         return colors.secondary;
       case "outline":
         return "transparent";
       default:
-        return colors.primary;
+        return "#3A3E4F";
     }
   };
 
@@ -143,7 +143,7 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 12,
+    borderRadius: 25,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

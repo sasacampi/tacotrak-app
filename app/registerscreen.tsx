@@ -105,10 +105,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                 ]}
               >
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Seu nome"
                   placeholderTextColor="#9E9E9E"
                   value={name}
@@ -128,10 +125,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                 ]}
               >
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Seu email"
                   placeholderTextColor="#9E9E9E"
                   keyboardType="email-address"
@@ -153,10 +147,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                 ]}
               >
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Sua senha"
                   placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showPassword}
@@ -186,10 +177,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
                 ]}
               >
                 <TextInput
-                  style={[
-                    styles.input,
-                    { color: colors.text, textAlign: "center" },
-                  ]}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Confirme sua senha"
                   placeholderTextColor="#9E9E9E"
                   secureTextEntry={!showConfirmPassword}
@@ -213,6 +201,7 @@ const RegisterScreen = ({ navigation }: ScreenProps<"Register">) => {
               onPress={handleRegister}
               loading={isLoading}
               style={styles.registerButton}
+              variant="primary"
             />
 
             <View style={styles.loginPrompt}>
@@ -280,7 +269,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 50,
-    borderRadius: 8,
+    borderRadius: 25,
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: "#E0E0E0",
@@ -293,11 +282,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     fontSize: 16,
-    textAlign: "center",
+    fontFamily: "Montserrat-Regular",
   },
   registerButton: {
     marginTop: 16,
     marginBottom: 24,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#3A3E4F",
   },
   loginPrompt: {
     flexDirection: "row",

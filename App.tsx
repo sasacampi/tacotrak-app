@@ -22,6 +22,12 @@ import {
   Poppins_600SemiBold,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
+import {
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
 import { View } from "react-native";
 import type { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -117,6 +123,10 @@ export default function App() {
     "Poppins-Medium": Poppins_500Medium,
     "Poppins-SemiBold": Poppins_600SemiBold,
     "Poppins-Bold": Poppins_700Bold,
+    "Montserrat-Regular": Montserrat_400Regular,
+    "Montserrat-Medium": Montserrat_500Medium,
+    "Montserrat-SemiBold": Montserrat_600SemiBold,
+    "Montserrat-Bold": Montserrat_700Bold,
   });
 
   if (!fontsLoaded) {
