@@ -12,14 +12,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-// Constantes
 const MIN_AGE = 16;
 const MAX_AGE = 80;
 const ITEM_HEIGHT = 60;
 const CONTAINER_HEIGHT = 300;
 
-// Offset para ajustar a posição vertical do número
-const VERTICAL_OFFSET = 30; // Ajuste este valor conforme necessário para mover mais para cima
+const VERTICAL_OFFSET = 30;
 
 export default function IdadeScreen() {
   const navigation = useNavigation<any>();
@@ -34,20 +32,16 @@ export default function IdadeScreen() {
     navigation.goBack();
   };
 
-  // Gera a lista de idades com tipo explícito
   const ages: number[] = [];
   for (let i = MIN_AGE; i <= MAX_AGE; i++) {
     ages.push(i);
   }
 
-  // Função para lidar com a seleção de idade
   const handleAgeSelect = (age: number) => {
     setIdade(age);
 
-    // Encontra o índice da idade selecionada
     const index = ages.indexOf(age);
     if (index !== -1 && scrollRef.current) {
-      // Calcula a posição para centralizar o item com ajuste vertical
       const centerOffset = index * ITEM_HEIGHT + VERTICAL_OFFSET;
 
       scrollRef.current.scrollTo({
@@ -72,7 +66,6 @@ export default function IdadeScreen() {
         <Text style={styles.question}>Qual é a sua idade?</Text>
 
         <View style={styles.ageSelector}>
-          {/* Área destacada fixa no centro */}
           <View style={styles.ageSelectorHighlight} />
 
           <ScrollView
@@ -83,7 +76,6 @@ export default function IdadeScreen() {
             snapToInterval={ITEM_HEIGHT}
             decelerationRate="fast"
             onMomentumScrollEnd={(event) => {
-              // Quando parar de rolar, encontra o item mais próximo do centro
               const y = event.nativeEvent.contentOffset.y - VERTICAL_OFFSET;
               const index = Math.round(y / ITEM_HEIGHT);
 
