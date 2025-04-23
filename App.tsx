@@ -8,7 +8,7 @@ import { MealsProvider } from "./app/context/MealsContext";
 import SplashScreen from "./app/splash";
 import LoginScreen from "./app/login";
 import RegisterScreen from "./app/registerscreen";
-import OnboardingScreen from "./app/onboardingscreen";
+import OnboardingNavigator from "./app/onboarding";
 import DashboardScreen from "./app/(tabs)/index";
 import AddFoodScreen from "./app/add-food";
 import FoodDetailScreen from "./app/food-detail";
@@ -22,12 +22,6 @@ import {
   Poppins_600SemiBold,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
-import {
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold,
-} from "@expo-google-fonts/montserrat";
 import { View } from "react-native";
 import type { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -123,10 +117,6 @@ export default function App() {
     "Poppins-Medium": Poppins_500Medium,
     "Poppins-SemiBold": Poppins_600SemiBold,
     "Poppins-Bold": Poppins_700Bold,
-    "Montserrat-Regular": Montserrat_400Regular,
-    "Montserrat-Medium": Montserrat_500Medium,
-    "Montserrat-SemiBold": Montserrat_600SemiBold,
-    "Montserrat-Bold": Montserrat_700Bold,
   });
 
   if (!fontsLoaded) {
@@ -149,7 +139,10 @@ export default function App() {
                 <Stack.Screen name="Splash" component={SplashScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
-                <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+                <Stack.Screen
+                  name="Onboarding"
+                  component={OnboardingNavigator}
+                />
                 <Stack.Screen name="MainTabs" component={MainTabs} />
                 <Stack.Screen name="AddFood" component={AddFoodScreen} />
                 <Stack.Screen name="FoodDetail" component={FoodDetailScreen} />

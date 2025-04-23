@@ -18,6 +18,10 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Onboarding: undefined;
+  Altura: undefined;
+  Genero: undefined;
+  Idade: undefined;
+  Peso: undefined;
   MainTabs: {
     screen: keyof MainTabParamList;
   };
