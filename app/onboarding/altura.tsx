@@ -1,17 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { RootStackParamList } from "../../types/navigation";
 import Slider from "@react-native-community/slider";
 
+const { width } = Dimensions.get("window");
+
 export default function AlturaScreen() {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [altura, setAltura] = useState(165);
+  const [alturaExibida, setAlturaExibida] = useState(165);
+  const alturaTemp = useRef(165);
 
   const handleNext = () => {
-    navigation.navigate("Genero" as never);
+    setAltura(alturaTemp.current);
+    navigation.navigate("Genero");
   };
 
   return (
@@ -25,9 +40,9 @@ export default function AlturaScreen() {
 
         <Text style={styles.question}>Qual é a sua altura?</Text>
 
-        <View style={styles.valueContainer}>
-          <Text style={styles.valueText}>{altura}</Text>
-          <Text style={styles.unitText}>cm</Text>
+        <View style={styles.heightDisplay}>
+          <Text style={styles.heightValue}>{alturaExibida}</Text>
+          <Text style={styles.heightUnit}>cm</Text>
         </View>
 
         <View style={styles.sliderContainer}>
@@ -37,15 +52,23 @@ export default function AlturaScreen() {
             maximumValue={220}
             step={1}
             value={altura}
-            onValueChange={setAltura}
+            onValueChange={(value) => {
+              alturaTemp.current = value;
+              setAlturaExibida(value);
+            }}
             minimumTrackTintColor="#FF5722"
             maximumTrackTintColor="#E0E0E0"
-            thumbImage={require("../../assets/images/height-thumb.png")}
+            thumbTintColor="#FF5722"
           />
-          <View style={styles.sliderLabels}>
-            <Text style={styles.sliderLabel}>140</Text>
-            <Text style={styles.sliderLabel}>180</Text>
-            <Text style={styles.sliderLabel}>220</Text>
+          <View style={styles.sliderMarks}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, index) => (
+              <View key={index} style={styles.sliderMark}>
+                <View style={styles.sliderMarkLine} />
+                <Text style={styles.sliderMarkText}>
+                  {Math.round(140 + index * 10)}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -60,7 +83,7 @@ export default function AlturaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#FFFFFF",
   },
   content: {
     flex: 1,
@@ -71,7 +94,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#FFE5E0",
     borderRadius: 2,
   },
   progressFill: {
@@ -81,29 +104,27 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   question: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "700",
     color: "#212121",
+    marginBottom: 30,
+    fontFamily: "Poppins-Bold",
+  },
+  heightDisplay: {
+    alignItems: "center",
     marginBottom: 40,
-    fontFamily: "Poppins-Bold",
   },
-  valueContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginBottom: 60,
-  },
-  valueText: {
-    fontSize: 64,
+  heightValue: {
+    fontSize: 72,
     fontWeight: "700",
     color: "#212121",
     fontFamily: "Poppins-Bold",
   },
-  unitText: {
-    fontSize: 16,
+  heightUnit: {
+    fontSize: 18,
     color: "#757575",
-    marginBottom: 12,
-    marginLeft: 4,
     fontFamily: "Poppins-Regular",
+    marginTop: -10,
   },
   sliderContainer: {
     marginBottom: 60,
@@ -112,18 +133,29 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 40,
   },
-  sliderLabels: {
+  sliderMarks: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginTop: 10,
     paddingHorizontal: 10,
   },
-  sliderLabel: {
+  sliderMark: {
+    alignItems: "center",
+    width: (width - 68) / 9,
+  },
+  sliderMarkLine: {
+    height: 10,
+    width: 1,
+    backgroundColor: "#E0E0E0",
+    marginBottom: 5,
+  },
+  sliderMarkText: {
     fontSize: 12,
-    color: "#757575",
+    color: "#BDBDBD",
     fontFamily: "Poppins-Regular",
   },
   nextButton: {
-    backgroundColor: "#FF5722",
+    backgroundColor: "#3A3E4F",
     borderRadius: 30,
     paddingVertical: 16,
     alignItems: "center",
