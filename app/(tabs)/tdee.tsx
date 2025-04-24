@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
   },
   calculateButton: {
     height: 56,
-    backgroundColor: "#e950a3",
+    backgroundColor: "#3A3E4F",
     borderRadius: 28,
   },
 });

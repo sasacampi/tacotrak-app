@@ -1074,7 +1074,7 @@ const styles = StyleSheet.create({
   caloriesConsumed: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#e950a3",
+    color: "#fc6a2d",
     fontFamily: "Poppins-Bold",
   },
   caloriesDivider: {
@@ -1095,7 +1095,7 @@ const styles = StyleSheet.create({
   },
   caloriesProgress: {
     height: "100%",
-    backgroundColor: "#e950a3",
+    backgroundColor: "#fc6a2d",
     borderRadius: 4,
   },
   macroSummary: {
