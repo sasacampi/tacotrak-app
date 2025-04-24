@@ -1,41 +1,63 @@
 "use client";
 
-import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import Svg, { Path, Circle } from "react-native-svg";
+
+const MIN_WEIGHT = 40;
+const MAX_WEIGHT = 120;
+const ITEM_HEIGHT = 60;
+const CONTAINER_HEIGHT = 300;
+
+const VERTICAL_OFFSET = 30;
 
 export default function PesoScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [peso, setPeso] = useState(67);
+  const scrollRef = useRef<ScrollView>(null);
 
   const handleNext = () => {
-    navigation.navigate("MainTabs" as never, { screen: "Dashboard" } as never);
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: "MainTabs",
+          params: { screen: "Dashboard" },
+        },
+      ],
+    });
   };
 
   const handleBack = () => {
     navigation.goBack();
   };
 
-  // Calculate gauge angle based on weight
-  const minWeight = 40;
-  const maxWeight = 120;
-  const startAngle = -120;
-  const endAngle = 120;
-  const angleRange = endAngle - startAngle;
-  const weightRange = maxWeight - minWeight;
-  const weightPercentage = (peso - minWeight) / weightRange;
-  const angle = startAngle + angleRange * weightPercentage;
-  const angleInRadians = (angle * Math.PI) / 180;
+  const weights: number[] = [];
+  for (let i = MIN_WEIGHT; i <= MAX_WEIGHT; i++) {
+    weights.push(i);
+  }
 
-  // Calculate needle endpoint
-  const centerX = 150;
-  const centerY = 150;
-  const radius = 120;
-  const needleX = centerX + radius * Math.cos(angleInRadians);
-  const needleY = centerY + radius * Math.sin(angleInRadians);
+  const handleWeightSelect = (weight: number) => {
+    setPeso(weight);
+
+    const index = weights.indexOf(weight);
+    if (index !== -1 && scrollRef.current) {
+      const centerOffset = index * ITEM_HEIGHT + VERTICAL_OFFSET;
+
+      scrollRef.current.scrollTo({
+        y: centerOffset,
+        animated: true,
+      });
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,68 +71,54 @@ export default function PesoScreen() {
           </View>
         </View>
 
-        <View style={styles.weightContainer}>
-          <Text style={styles.weightValue}>{peso}</Text>
-          <Text style={styles.weightUnit}>kg</Text>
-        </View>
+        <Text style={styles.question}>Qual é o seu peso?</Text>
 
-        <View style={styles.gaugeContainer}>
-          <Svg height="300" width="300" viewBox="0 0 300 300">
-            {/* Gauge background */}
-            <Path
-              d={`M 30 150 A 120 120 0 0 1 270 150`}
-              stroke="#E0E0E0"
-              strokeWidth="10"
-              fill="none"
-            />
-            {/* Gauge fill */}
-            <Path
-              d={`M 30 150 A 120 120 0 0 1 ${needleX} ${needleY}`}
-              stroke="#FF5722"
-              strokeWidth="10"
-              fill="none"
-            />
-            {/* Gauge markers */}
-            <Text
-              x="30"
-              y="180"
-              fill="#757575"
-              fontSize="12"
-              textAnchor="middle"
-            >
-              {minWeight}
-            </Text>
-            <Text
-              x="150"
-              y="50"
-              fill="#757575"
-              fontSize="12"
-              textAnchor="middle"
-            >
-              {Math.round((minWeight + maxWeight) / 2)}
-            </Text>
-            <Text
-              x="270"
-              y="180"
-              fill="#757575"
-              fontSize="12"
-              textAnchor="middle"
-            >
-              {maxWeight}
-            </Text>
-            {/* Needle */}
-            <Path
-              d={`M 150 150 L ${needleX} ${needleY}`}
-              stroke="#FF5722"
-              strokeWidth="2"
-              fill="none"
-            />
-            <Circle cx="150" cy="150" r="10" fill="#FF5722" />
-          </Svg>
+        <View style={styles.weightSelector}>
+          <View style={styles.weightSelectorHighlight} />
+
+          <ScrollView
+            ref={scrollRef}
+            horizontal={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.weightOptionsContainer}
+            snapToInterval={ITEM_HEIGHT}
+            decelerationRate="fast"
+            onMomentumScrollEnd={(event) => {
+              const y = event.nativeEvent.contentOffset.y - VERTICAL_OFFSET;
+              const index = Math.round(y / ITEM_HEIGHT);
+
+              if (index >= 0 && index < weights.length) {
+                setPeso(weights[index]);
+              }
+            }}
+          >
+            {weights.map((weight) => (
+              <TouchableOpacity
+                key={weight}
+                style={[
+                  styles.weightOption,
+                  peso === weight && styles.selectedWeightOption,
+                ]}
+                onPress={() => handleWeightSelect(weight)}
+              >
+                <Text
+                  style={[
+                    styles.weightText,
+                    peso === weight && styles.selectedWeightText,
+                  ]}
+                >
+                  {weight}
+                  {peso === weight && (
+                    <Text style={styles.weightUnit}> kg</Text>
+                  )}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
 
         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextButtonText}>Próximo</Text>
+          <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -120,7 +128,7 @@ export default function PesoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#FFFFFF",
   },
   content: {
     flex: 1,
@@ -143,29 +151,57 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF5722",
     borderRadius: 2,
   },
-  weightContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "flex-end",
-    marginBottom: 40,
-  },
-  weightValue: {
-    fontSize: 64,
+  question: {
+    fontSize: 24,
     fontWeight: "700",
     color: "#212121",
+    marginBottom: 40,
+    fontFamily: "Poppins-Bold",
+  },
+  weightSelector: {
+    height: CONTAINER_HEIGHT,
+    position: "relative",
+    marginBottom: 40,
+    overflow: "hidden",
+  },
+  weightSelectorHighlight: {
+    position: "absolute",
+    top: "50%",
+    left: 0,
+    right: 0,
+    height: ITEM_HEIGHT,
+    backgroundColor: "#FF5722",
+    opacity: 0.1,
+    borderRadius: 30,
+    transform: [{ translateY: -ITEM_HEIGHT / 2 }],
+    zIndex: 1,
+  },
+  weightOptionsContainer: {
+    paddingVertical: CONTAINER_HEIGHT / 2,
+  },
+  weightOption: {
+    height: ITEM_HEIGHT,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  selectedWeightOption: {
+    transform: [{ scale: 1.2 }],
+  },
+  weightText: {
+    fontSize: 24,
+    color: "#BDBDBD",
+    fontFamily: "Poppins-Medium",
+  },
+  selectedWeightText: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#FF5722",
     fontFamily: "Poppins-Bold",
   },
   weightUnit: {
-    fontSize: 20,
-    color: "#757575",
-    marginBottom: 12,
-    marginLeft: 4,
-    fontFamily: "Poppins-Regular",
-  },
-  gaugeContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 40,
+    fontSize: 18,
+    color: "#FF5722",
+    fontFamily: "Poppins-Medium",
   },
   nextButton: {
     backgroundColor: "#FF5722",
