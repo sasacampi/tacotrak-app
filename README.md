@@ -57,7 +57,7 @@ Abra no seu dispositivo com o aplicativo Expo Go ou emulador Android/iOS.
 ├── App.js             # Arquivo principal
 └── README.md          # Este documento
 
-🧠 Aprendizados
+## 🧠 Aprendizados
 Durante o desenvolvimento deste projeto, aprofundei meus conhecimentos em:
 
 - Gerenciamento de estado no React Native.
@@ -70,15 +70,15 @@ Durante o desenvolvimento deste projeto, aprofundei meus conhecimentos em:
 
 - Estruturação de aplicativos mobile escaláveis.
 
-🏗️ Status do Projeto
+## 🏗️ Status do Projeto
 🚧 Em desenvolvimento — protótipo funcional
 - Funcionalidades essenciais estão implementadas para demonstração acadêmica, com foco no fluxo principal do usuário.
 
-🤝 Contribuição
+## 🤝 Contribuição
 Sinta-se à vontade para abrir issues, sugerir melhorias ou contribuir com o projeto!
 
-📜 Licença
+## 📜 Licença
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-💻 Autora
+## 💻 Autora
 Desenvolvido por Sabrina Pereira Sales Campos
