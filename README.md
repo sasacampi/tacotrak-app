@@ -47,16 +47,6 @@ npx expo start
 
 Abra no seu dispositivo com o aplicativo Expo Go ou emulador Android/iOS.
 
-🗺️ Estrutura do Projeto
-.
-├── assets/            # Imagens e ícones
-├── components/        # Componentes reutilizáveis
-├── screens/           # Telas do app (Dashboard, Diary, AddFood, etc.)
-├── data/              # Dados mockados em JSON
-├── services/          # Integração com API da TACO
-├── App.js             # Arquivo principal
-└── README.md          # Este documento
-
 ## 🧠 Aprendizados
 Durante o desenvolvimento deste projeto, aprofundei meus conhecimentos em:
 
