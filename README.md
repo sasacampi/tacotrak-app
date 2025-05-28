@@ -1,5 +1,5 @@
 # 📱 TACOTRAK — TCC
-
+![Banner](https://imgur.com/PMc2Vmh.png)
 > Aplicativo mobile para controle alimentar focado no público brasileiro e utilizando a TACO (Tabela Brasileira de Composição de Alimentos) como base nutricional.
 
 ---
@@ -36,7 +36,7 @@ O layout foi desenvolvido no Figma, priorizando uma interface limpa, acessível 
 
 1. Clone este repositório:
 bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/sasacampi/tacotrak-app.git
 
 2. Instale as dependências:
 cd tacotrak-app
@@ -60,19 +60,19 @@ Abra no seu dispositivo com o aplicativo Expo Go ou emulador Android/iOS.
 🧠 Aprendizados
 Durante o desenvolvimento deste projeto, aprofundei meus conhecimentos em:
 
-Gerenciamento de estado no React Native.
+- Gerenciamento de estado no React Native.
 
-Consumo de APIs REST.
+- Consumo de APIs REST.
 
-Manipulação de dados estruturados em JSON.
+- Manipulação de dados estruturados em JSON.
 
-Práticas de UX/UI design e acessibilidade.
+- Práticas de UX/UI design e acessibilidade.
 
-Estruturação de aplicativos mobile escaláveis.
+- Estruturação de aplicativos mobile escaláveis.
 
 🏗️ Status do Projeto
 🚧 Em desenvolvimento — protótipo funcional
-Funcionalidades essenciais estão implementadas para demonstração acadêmica, com foco no fluxo principal do usuário.
+- Funcionalidades essenciais estão implementadas para demonstração acadêmica, com foco no fluxo principal do usuário.
 
 🤝 Contribuição
 Sinta-se à vontade para abrir issues, sugerir melhorias ou contribuir com o projeto!
